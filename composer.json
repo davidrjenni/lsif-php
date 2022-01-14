@@ -1,0 +1,17 @@
+{
+    "name": "davidrjenni/lsif-php",
+    "description": "Language Server Indexing Format (LSIF) generator for PHP",
+    "license": "MIT",
+    "version": "0.0.1",
+    "keywords": [
+        "lsif"
+    ],
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "prefer-stable": true,
+    "require": {
+        "php": "^8.0"
+    }
+}
