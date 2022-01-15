@@ -26,3 +26,15 @@ jobs:
           php_version: "${{ matrix.php-version }}"
           version: 2
           command: validate
+
+      - name: "Install dependencies"
+        uses: php-actions/composer@v6
+        with:
+          php_version: "${{ matrix.php-version }}"
+          version: 2
+
+      - name: "Tests"
+        uses: php-actions/phpunit@v3
+        with:
+          php_version: "${{ matrix.php-version }}"
+          configuration: phpunit.xml
