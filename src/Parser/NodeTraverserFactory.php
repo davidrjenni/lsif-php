@@ -41,7 +41,7 @@ final class NodeTraverserFactory
             new class($newThis, $visitor, $args) extends NodeVisitorAbstract
             {
 
-                /** @var mixed[] $args */
+                /** @param  mixed[]  $args */
                 public function __construct(
                     private object $newThis,
                     private Closure $visitor,
