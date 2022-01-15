@@ -1,0 +1,28 @@
+name: CI
+
+on: [push]
+
+jobs:
+  test:
+    name: "Test"
+
+    runs-on: ${{ matrix.operating-system }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version:
+          - "8.0"
+          - "8.1"
+        operating-system: [ubuntu-latest, window-latest]
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2"
+
+      - name: "Validate"
+        uses: php-actions/composer@v6
+        with:
+          php_version: "${{ matrix.php-version }}"
+          version: 2
+          command: validate
