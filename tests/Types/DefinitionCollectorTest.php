@@ -13,8 +13,13 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
 
+use function explode;
+
 final class DefinitionCollectorTest extends TestCase
 {
+
+    /** @var array<string, int> */
+    private array $documents;
 
     /** @var array<string, Definition> */
     private array $definitions;
@@ -29,12 +34,17 @@ final class DefinitionCollectorTest extends TestCase
             new RecursiveDirectoryIterator(__DIR__ . DIRECTORY_SEPARATOR . 'TestData')
         );
 
+        $i = 0;
+        $this->documents = [];
+
         /** @var SplFileInfo $f */
-        foreach ($files as $f) {
+        foreach ($files as  $f) {
             if ($f->getExtension() === 'php') {
                 $contents = FileReader::read($f->getRealPath());
                 $stmts = $parser->parse($contents);
-                $definitionCollector->collect($stmts);
+                $definitionCollector->collect($i, $stmts);
+                $this->documents[$f->getFilename()] = $i;
+                $i++;
             }
         }
 
@@ -87,6 +97,9 @@ final class DefinitionCollectorTest extends TestCase
 
         $this->assertEquals($startLine, $def->name()->getStartLine());
         $this->assertEquals($exported, $def->exported());
+
+        $filename = explode('::', $ident)[0] ?? '';
+        $this->assertEquals($this->documents["$filename.php"], $def->docId());
 
         if ($doc === null) {
             $this->assertNull($def->doc());

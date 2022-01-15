@@ -12,12 +12,19 @@ final class Definition
 {
 
     public function __construct(
+        private int $docId,
         private Node $name,
         private string $ident,
         private Node $def,
         private bool $exported,
         private ?Doc $doc,
     ) {
+    }
+
+    /** Returns the document ID in which the identifier is defined in. */
+    public function docId(): int
+    {
+        return $this->docId;
     }
 
     /** Returns the AST node of the identifier's name. */

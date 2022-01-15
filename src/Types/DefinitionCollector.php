@@ -51,46 +51,47 @@ final class DefinitionCollector
      *
      * @param  Stmt[]  $stmts
      */
-    public function collect(array $stmts): void
+    public function collect(int $docId, array $stmts): void
     {
         $this->nodeTraverserFactory
             ->create(
                 $this,
-                function (Node $node): void {
-                    $this->collectDefinition($node);
+                function (Node $node) use ($docId): void {
+                    $this->collectDefinition($docId, $node);
                 }
             )
             ->traverse($stmts);
     }
 
-    public function collectDefinition(Node $node): void
+    public function collectDefinition(int $docId, Node $node): void
     {
         if ($node instanceof ClassLike && $node->name !== null) {
-            $this->collectClassLikeDefinition($node);
+            $this->collectClassLikeDefinition($docId, $node);
         } elseif ($node instanceof ClassConst) {
             foreach ($node->consts as $const) {
-                $this->collectClassConst($node, $const);
+                $this->collectClassConst($docId, $node, $const);
             }
         } elseif ($node instanceof Property) {
             foreach ($node->props as $prop) {
-                $this->collectProperty($node, $prop);
+                $this->collectProperty($docId, $node, $prop);
             }
         } elseif ($node instanceof ClassMethod) {
-            $this->collectMethod($node);
+            $this->collectMethod($docId, $node);
         } elseif ($node instanceof Param) {
-            $this->collectParam($node);
+            $this->collectParam($docId, $node);
         } elseif ($node instanceof Assign) {
-            $this->collectAssign($node);
+            $this->collectAssign($docId, $node);
         }
     }
 
-    private function collectClassLikeDefinition(ClassLike $classLike): void
+    private function collectClassLikeDefinition(int $docId, ClassLike $classLike): void
     {
         if (!isset($classLike->namespacedName)) {
             return;
         }
 
         $this->definitions[] = new Definition(
+            $docId,
             $classLike->name,
             $classLike->namespacedName->toString(),
             $classLike,
@@ -99,9 +100,10 @@ final class DefinitionCollector
         );
     }
 
-    private function collectClassConst(ClassConst $classConst, Const_ $const): void
+    private function collectClassConst(int $docId, ClassConst $classConst, Const_ $const): void
     {
         $this->definitions[] = new Definition(
+            $docId,
             $const->name,
             $this->fqName($classConst, $const->name->toString()),
             $classConst,
@@ -110,9 +112,10 @@ final class DefinitionCollector
         );
     }
 
-    private function collectProperty(Property $property, PropertyProperty $prop): void
+    private function collectProperty(int $docId, Property $property, PropertyProperty $prop): void
     {
         $this->definitions[] = new Definition(
+            $docId,
             $prop->name,
             $this->fqName($property, $prop->name->toString()),
             $property,
@@ -121,9 +124,10 @@ final class DefinitionCollector
         );
     }
 
-    private function collectMethod(ClassMethod $method): void
+    private function collectMethod(int $docId, ClassMethod $method): void
     {
         $this->definitions[] = new Definition(
+            $docId,
             $method->name,
             $this->fqName($method, $method->name->toString()),
             $method,
@@ -132,13 +136,14 @@ final class DefinitionCollector
         );
     }
 
-    private function collectParam(Param $param): void
+    private function collectParam(int $docId, Param $param): void
     {
         $name = new Identifier($param->var->name, $param->getAttributes());
 
         // Handle constructor property promotion.
         if ($param->flags !== 0) {
             $this->definitions[] = new Definition(
+                $docId,
                 $name,
                 $this->fqName($param->getAttribute('parent'), $name->toString()),
                 $param,
@@ -148,6 +153,7 @@ final class DefinitionCollector
         }
 
         $this->definitions[] = new Definition(
+            $docId,
             $name,
             $this->fqName($param, $name->toString()),
             $param,
@@ -156,13 +162,14 @@ final class DefinitionCollector
         );
     }
 
-    private function collectAssign(Assign $assign): void
+    private function collectAssign(int $docId, Assign $assign): void
     {
         if (!$assign->var instanceof Variable) {
             return;
         }
 
         $this->definitions[] = new Definition(
+            $docId,
             $assign->var,
             $this->fqName($assign, $assign->var->name),
             $assign->var,
