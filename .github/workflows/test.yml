@@ -24,6 +24,7 @@ jobs:
         uses: php-actions/composer@v6
         with:
           php_version: "${{ matrix.php-version }}"
+          php_extensions: json
           version: 2
           command: validate
 
@@ -31,13 +32,14 @@ jobs:
         uses: php-actions/composer@v6
         with:
           php_version: "${{ matrix.php-version }}"
+          php_extensions: json
           version: 2
 
       - name: "Tests"
         uses: php-actions/phpunit@v3
         with:
           php_version: "${{ matrix.php-version }}"
-          php_extensions: xdebug
+          php_extensions: json xdebug
           configuration: phpunit.xml
           args: --coverage-text --colors=never
         env:
