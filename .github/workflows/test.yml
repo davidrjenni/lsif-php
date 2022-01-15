@@ -14,7 +14,7 @@ jobs:
         php-version:
           - "8.0"
           - "8.1"
-        operating-system: [ubuntu-latest, window-latest]
+        operating-system: [ubuntu-latest]
 
     steps:
       - name: "Checkout"
