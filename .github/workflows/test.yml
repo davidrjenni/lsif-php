@@ -39,6 +39,6 @@ jobs:
           php_version: "${{ matrix.php-version }}"
           php_extensions: xdebug
           configuration: phpunit.xml
-          args: --coverage-text
+          args: --coverage-text --colors=never
         env:
           XDEBUG_MODE: coverage
