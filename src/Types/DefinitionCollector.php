@@ -9,7 +9,6 @@ use PhpParser\Node;
 use PhpParser\Node\Const_;
 use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Expr\Variable;
-use PhpParser\Node\FunctionLike;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Param;
 use PhpParser\Node\Stmt;
@@ -86,14 +85,10 @@ final class DefinitionCollector
 
     private function collectClassLikeDefinition(int $docId, ClassLike $classLike): void
     {
-        if (!isset($classLike->namespacedName)) {
-            return;
-        }
-
         $this->definitions[] = new Definition(
             $docId,
             $classLike->name,
-            $classLike->namespacedName->toString(),
+            IdentifierBuilder::fqClassName($classLike),
             $classLike,
             true,
             $classLike->getDocComment()
@@ -105,8 +100,8 @@ final class DefinitionCollector
         $this->definitions[] = new Definition(
             $docId,
             $const->name,
-            $this->fqName($classConst, $const->name->toString()),
-            $classConst,
+            IdentifierBuilder::fqName($classConst, $const->name->toString()),
+            $const,
             !$classConst->isPrivate(),
             $classConst->getDocComment()
         );
@@ -117,8 +112,8 @@ final class DefinitionCollector
         $this->definitions[] = new Definition(
             $docId,
             $prop->name,
-            $this->fqName($property, $prop->name->toString()),
-            $property,
+            IdentifierBuilder::fqName($property, $prop->name->toString()),
+            $prop,
             !$property->isPrivate(),
             $property->getDocComment()
         );
@@ -129,7 +124,7 @@ final class DefinitionCollector
         $this->definitions[] = new Definition(
             $docId,
             $method->name,
-            $this->fqName($method, $method->name->toString()),
+            IdentifierBuilder::fqName($method, $method->name->toString()),
             $method,
             !$method->isPrivate(),
             $method->getDocComment()
@@ -145,7 +140,7 @@ final class DefinitionCollector
             $this->definitions[] = new Definition(
                 $docId,
                 $name,
-                $this->fqName($param->getAttribute('parent'), $name->toString()),
+                IdentifierBuilder::fqName($param->getAttribute('parent'), $name->toString()),
                 $param,
                 !((bool) ($param->flags & Class_::MODIFIER_PRIVATE)),
                 $param->getDocComment()
@@ -155,7 +150,7 @@ final class DefinitionCollector
         $this->definitions[] = new Definition(
             $docId,
             $name,
-            $this->fqName($param, $name->toString()),
+            IdentifierBuilder::fqName($param, $name->toString()),
             $param,
             false,
             $param->getDocComment()
@@ -171,39 +166,10 @@ final class DefinitionCollector
         $this->definitions[] = new Definition(
             $docId,
             $assign->var,
-            $this->fqName($assign, $assign->var->name),
+            IdentifierBuilder::fqName($assign, $assign->var->name),
             $assign->var,
             false,
             $assign->getDocComment()
         );
-    }
-
-    private function fqName(Node $node, string $name): string
-    {
-        $node = $node->getAttribute('parent');
-        if ($node === null) {
-            return $name;
-        }
-
-        if ($node instanceof FunctionLike) {
-            $name = "{$this->functionLikeName($node)}::$name";
-        } else if ($node instanceof ClassLike) {
-            $name = "{$this->classLikeName($node)}::$name";
-        }
-        return $this->fqName($node, $name);
-    }
-
-    private function classLikeName(ClassLike $node): string
-    {
-        return !isset($node->namespacedName)
-            ? "anon-class-{$node->getStartTokenPos()}"
-            : $node->namespacedName->toString();
-    }
-
-    private function functionLikeName(FunctionLike $node): string
-    {
-        return !isset($node->name)
-            ? "anon-func-{$node->getStartTokenPos()}"
-            : $node->name->toString();
     }
 }
