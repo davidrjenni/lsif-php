@@ -49,9 +49,10 @@ final class NodeTraverserFactory
                 ) {
                 }
 
-                public function leaveNode(Node $node): void
+                public function leaveNode(Node $node): ?Node
                 {
                     $this->visitor->call($this->newThis, $node, ...$this->args);
+                    return null;
                 }
             }
         );
