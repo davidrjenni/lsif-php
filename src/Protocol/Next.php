@@ -10,8 +10,6 @@ final class Next extends Edge
     public function __construct(int $id, private int $outV, private int $inV)
     {
         parent::__construct($id, Edge::LABEL_NEXT);
-        $this->outV = $outV;
-        $this->inV = $inV;
     }
 
     /** @return array<string, int|string> */
