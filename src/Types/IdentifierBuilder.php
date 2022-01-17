@@ -6,6 +6,7 @@ namespace LsifPhp\Types;
 
 use PhpParser\Node;
 use PhpParser\Node\FunctionLike;
+use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\ClassLike;
 
 /** IdentifierBuilder helps to construct fully qualified names from AST nodes. */
@@ -31,8 +32,23 @@ final class IdentifierBuilder
         return self::fqName($node, $name);
     }
 
-    public static function fqClassName(ClassLike $node): string
+    /** Returns the fully qualified name of the given class like AST node. */
+    public static function fqClassName(ClassLike|Name $node): string
     {
+        if ($node instanceof Name) {
+            $name = $node->toString();
+            switch ($name) {
+                case 'parent':
+                    return self::fqClassName(ClassLikeUtil::nearestClassLike($node)->extends);
+                case 'self':
+                case 'static':
+                    $node = ClassLikeUtil::nearestClassLike($node);
+                    break;
+                default:
+                    return $name;
+            }
+        }
+
         $name = self::classLikeName($node);
         $parent = $node->getAttribute('parent');
         return $parent !== null
