@@ -1,6 +1,10 @@
 image:
   file: .gitpod.Dockerfile
 
+tasks:
+  - name: Install dependencies
+    init: composer install
+
 vscode:
   extensions:
     - bmewburn.vscode-intelephense-client
