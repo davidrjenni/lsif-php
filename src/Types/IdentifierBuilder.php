@@ -50,7 +50,7 @@ final class IdentifierBuilder
     private static function functionLikeName(FunctionLike $node): string
     {
         return !isset($node->name)
-            ? "anon-func-{$node->getStartTokenPos()}"
-            : $node->name->toString();
+            ? "anon-func-{$node->getStartTokenPos()}()"
+            : "{$node->name}()";
     }
 }

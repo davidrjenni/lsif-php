@@ -124,7 +124,7 @@ final class DefinitionCollector
         $this->definitions[] = new Definition(
             $docId,
             $method->name,
-            IdentifierBuilder::fqName($method, $method->name->toString()),
+            IdentifierBuilder::fqName($method, "{$method->name}()"),
             $method,
             !$method->isPrivate(),
             $method->getDocComment()

@@ -18,4 +18,9 @@ class Class3
     {
         $this->c3p1->c1m1()->c2m1();
     }
+
+    public function c3p1(): Class1
+    {
+        return $this->c3p1;
+    }
 }
