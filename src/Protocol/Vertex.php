@@ -6,6 +6,8 @@ namespace LsifPhp\Protocol;
 
 use InvalidArgumentException;
 
+use function in_array;
+
 abstract class Vertex extends Element
 {
     public const LABEL_META_DATA = 'metaData';

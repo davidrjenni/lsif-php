@@ -8,6 +8,9 @@ use InvalidArgumentException;
 use JsonSerializable;
 use PhpParser\Node;
 
+use function strlen;
+use function strrpos;
+
 final class Pos implements JsonSerializable
 {
 

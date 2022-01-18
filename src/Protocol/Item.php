@@ -6,6 +6,8 @@ namespace LsifPhp\Protocol;
 
 use InvalidArgumentException;
 
+use function in_array;
+
 final class Item extends Edge
 {
 

@@ -7,6 +7,8 @@ namespace LsifPhp\Protocol;
 use InvalidArgumentException;
 use JsonSerializable;
 
+use function in_array;
+
 abstract class Element implements JsonSerializable
 {
     public const TYPE_EDGE = 'edge';
