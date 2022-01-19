@@ -26,6 +26,7 @@
     "require": {
         "php": "^8.0",
         "ext-json": "*",
+        "composer-runtime-api": "^2.2",
         "nikic/php-parser": "^4.13"
     },
     "require-dev": {
