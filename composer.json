@@ -10,6 +10,9 @@
         "sort-packages": true
     },
     "prefer-stable": true,
+    "bin": [
+        "bin/lsif-php"
+    ],
     "autoload": {
         "psr-4": {
             "LsifPhp\\": "src/"
