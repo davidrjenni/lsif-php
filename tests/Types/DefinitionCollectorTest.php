@@ -71,6 +71,10 @@ final class DefinitionCollectorTest extends TestCase
         $this->assertDefinition('Class2', 8, true, 'Class2 is a class for testing');
         $this->assertDefinition('Class2::c2m1()', 11, true);
         $this->assertDefinition('Class2::c2m2()', 15, true);
+        $this->assertDefinition('Class2::c2m3()::k', 22, false);
+        $this->assertDefinition('Class2::c2m3()::v', 22, false);
+        $this->assertDefinition('Class2::c2m3()::w', 26, false);
+        $this->assertDefinition('Class2::c2m3()::i', 30, false);
 
         $this->assertDefinition('Class3::c3p1', 10, true);
 

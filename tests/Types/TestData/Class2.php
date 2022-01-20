@@ -16,4 +16,19 @@ class Class2
     {
         return new Class1();
     }
+
+    private function c2m3(array $c2m3p1): void
+    {
+        foreach ($c2m3p1 as $k => $v) {
+            echo ("$k: $v\n");
+        }
+
+        foreach ($c2m3p1 as $w) {
+            echo ("$w\n");
+        }
+
+        for ($i = 0; $i < count($c2m3p1); $i++) {
+            echo ($c2m3p1[$i] . "\n");
+        }
+    }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace LsifPhp\Types;
 
 use LsifPhp\Parser\NodeTraverserFactory;
+use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Const_;
 use PhpParser\Node\Expr\Assign;
@@ -16,6 +17,7 @@ use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassConst;
 use PhpParser\Node\Stmt\ClassLike;
 use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\Stmt\Foreach_;
 use PhpParser\Node\Stmt\Property;
 use PhpParser\Node\Stmt\PropertyProperty;
 
@@ -80,6 +82,8 @@ final class DefinitionCollector
             $this->collectParam($docId, $node);
         } elseif ($node instanceof Assign) {
             $this->collectAssign($docId, $node);
+        } elseif ($node instanceof Foreach_) {
+            $this->collectForeach($docId, $node);
         }
     }
 
@@ -159,17 +163,25 @@ final class DefinitionCollector
 
     private function collectAssign(int $docId, Assign $assign): void
     {
-        if (!$assign->var instanceof Variable) {
+        if ($assign->var instanceof Variable) {
+            $this->collectVar($docId, $assign->var, $assign->getDocComment());
+        }
+    }
+
+    private function collectForeach(int $docId, Foreach_ $f): void
+    {
+        if ($f->keyVar !== null) {
+            $this->collectVar($docId, $f->keyVar);
+        }
+        $this->collectVar($docId, $f->valueVar);
+    }
+
+    private function collectVar(int $docId, Variable $var, ?Doc $doc = null): void
+    {
+        if (!is_string($var->name)) {
             return;
         }
-
-        $this->definitions[] = new Definition(
-            $docId,
-            $assign->var,
-            IdentifierBuilder::fqName($assign, $assign->var->name),
-            $assign->var,
-            false,
-            $assign->getDocComment()
-        );
+        $fqName = IdentifierBuilder::fqName($var, $var->name);
+        $this->definitions[] = new Definition($docId, $var, $fqName, $var, false, $doc);
     }
 }
