@@ -92,6 +92,10 @@ final class TypeCollectorTest extends TestCase
         $type = $this->typeCollector->typeExpr($expr);
         $this->assertEquals(['Tests\Types\TestData\Class1'], $type);
 
+        $expr = $this->findPropertyFetch('Class5.php', 't1p1');
+        $type = $this->typeCollector->typeExpr($expr);
+        $this->assertEquals(['Tests\Types\TestData\Class1', 'Tests\Types\TestData\Class3'], $type);
+
         $expr = $this->findPropertyFetch('Class6.php', 'c6p1');
         $type = $this->typeCollector->typeExpr($expr);
         $this->assertEquals(['Tests\Types\TestData\AbstractClass1'], $type);
@@ -123,6 +127,18 @@ final class TypeCollectorTest extends TestCase
         $expr = $this->findMethodCall('Class8.php', 'c7m1');
         $type = $this->typeCollector->typeExpr($expr);
         $this->assertEquals(['Tests\Types\TestData\Class5'], $type);
+
+        $expr = $this->findMethodCall('Class7.php', 'i1m1');
+        $type = $this->typeCollector->typeExpr($expr);
+        $this->assertEquals(['Tests\Types\TestData\Class1'], $type);
+
+        $expr = $this->findMethodCall('Class8.php', 'c1m1');
+        $type = $this->typeCollector->typeExpr($expr);
+        $this->assertEquals(['Tests\Types\TestData\Class2'], $type);
+
+        $expr = $this->findMethodCall('Trait2.php', 't1m1');
+        $type = $this->typeCollector->typeExpr($expr);
+        $this->assertEquals(['Tests\Types\TestData\Class1'], $type);
     }
 
     private function findVariable(string $filename, string $name): Expr

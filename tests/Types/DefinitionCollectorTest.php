@@ -94,6 +94,12 @@ final class DefinitionCollectorTest extends TestCase
         $this->assertDefinition('Class8::c8m2()::anon-func-152()::anon-class-193::c8v4v2p1', 39, false);
         $this->assertDefinition('Class8::c8m2()::anon-func-152()::anon-class-193::__construct()', 41, true);
         $this->assertDefinition('Class8::c8m2()::anon-func-152()::anon-class-193::c8v4v2m1()', 46, true);
+
+        $this->assertDefinition('Interface1::i1m1()', 10, true);
+
+        $this->assertDefinition('Trait1::t1m1()', 12, true);
+        $this->assertDefinition('Trait2::t2m1()', 11, true);
+        $this->assertDefinition('Trait2::t2m1()::v1', 13, false);
     }
 
     private function assertDefinition(string $ident, int $startLine, bool $exported, ?string $doc = null)

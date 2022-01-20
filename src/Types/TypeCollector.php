@@ -25,7 +25,9 @@ use PhpParser\Node\Name;
 use PhpParser\Node\NullableType;
 use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\ClassLike;
 use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\Stmt\Interface_;
 use PhpParser\Node\Stmt\Property;
 use PhpParser\Node\Stmt\PropertyProperty;
 use PhpParser\Node\UnionType;
@@ -41,9 +43,13 @@ final class TypeCollector
     /** @var array<string, string[]> */
     private array $types;
 
+    /** @var array<string, string[]> */
+    private array $uppers;
+
     public function __construct()
     {
         $this->types = [];
+        $this->uppers = [];
     }
 
     /**
@@ -118,7 +124,18 @@ final class TypeCollector
      */
     private function lookupMethodType(array $classNames, string $method): array
     {
-        return $this->lookupClassType($classNames, "{$method}()");
+        $types = $this->lookupClassType($classNames, "{$method}()");
+        if (count($types) > 0) {
+            return $types;
+        }
+        foreach ($classNames as $name) {
+            $uppers = $this->uppers[$name] ?? [];
+            $types = $this->lookupMethodType($uppers, $method);
+            if (count($types) > 0) {
+                return $types;
+            }
+        }
+        return [];
     }
 
     /**
@@ -132,6 +149,16 @@ final class TypeCollector
             $fqName = "{$className}::{$name}";
             if (isset($this->types[$fqName])) {
                 $types = array_merge($types, $this->types[$fqName]);
+            }
+        }
+        if (count($types) > 0) {
+            return $types;
+        }
+        foreach ($classNames as $class) {
+            $uppers = $this->uppers[$class] ?? [];
+            $types = $this->lookupClassType($uppers, $name);
+            if (count($types) > 0) {
+                return $types;
             }
         }
         return $types;
@@ -159,6 +186,9 @@ final class TypeCollector
         foreach ($definitions as $def) {
             $node = $def->def();
             switch (true) {
+                case $node instanceof ClassLike:
+                    $this->collectUppers($node);
+                    break;
                 case $node instanceof ClassMethod:
                     $types = $this->unpackTypes($node->returnType);
                     $this->addTypes($def, $types);
@@ -190,6 +220,40 @@ final class TypeCollector
             $types = $this->typeExpr($parent->expr);
             $this->addTypes($def, $types);
         }
+    }
+
+    private function collectUppers(ClassLike $classLike): void
+    {
+        if ($classLike instanceof Class_) {
+            foreach ($classLike->implements as $iface) {
+                $this->addClassLikeUpper($classLike, $iface);
+            }
+            if ($classLike->extends !== null) {
+                $this->addClassLikeUpper($classLike, $classLike->extends);
+            }
+        }
+
+        if ($classLike instanceof Interface_) {
+            foreach ($classLike->extends as $iface) {
+                $this->addClassLikeUpper($classLike, $iface);
+            }
+        }
+
+        foreach ($classLike->getTraitUses() as $traitUse) {
+            foreach ($traitUse->traits as $trait) {
+                $this->addClassLikeUpper($classLike, $trait);
+            }
+        }
+    }
+
+    private function addClassLikeUpper(ClassLike $classLike, Name $upper): void
+    {
+        $fqName = IdentifierBuilder::fqClassName($classLike);
+        if (!isset($this->uppers[$fqName])) {
+            $this->uppers[$fqName] = [];
+        }
+        $name = $this->unpackNamedType($upper)[0];
+        $this->uppers[$fqName][] = $name;
     }
 
     /** @return string[] */
