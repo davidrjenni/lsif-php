@@ -8,3 +8,7 @@
 [![Docker Image Size](https://img.shields.io/docker/image-size/davidrjenni/lsif-php)](https://hub.docker.com/r/davidrjenni/lsif-php)
 
 Language Server Indexing Format (LSIF) generator for PHP
+
+---
+
+This repository is indexed using itself and available on [Sourcegraph](https://sourcegraph.com/github.com/davidrjenni/lsif-php).
