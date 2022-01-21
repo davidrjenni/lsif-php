@@ -44,3 +44,21 @@ jobs:
           args: --coverage-text --colors=never
         env:
           XDEBUG_MODE: coverage
+
+  lsif:
+    name: "LSIF"
+
+    if: github.repository == 'davidrjenni/lsif-php'
+
+    runs-on: ubuntu-latest
+    container: davidrjenni/lsif-php:main
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2"
+
+      - name: "Generate LSIF data"
+        run: lsif-php > dump.lsif
+
+      - name: "Upload LSIF data"
+        run: src lsif upload -github-token=${{ secrets.GITHUB_TOKEN }}
