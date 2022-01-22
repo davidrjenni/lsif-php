@@ -28,7 +28,7 @@ final class DefinitionCollector
     private NodeTraverserFactory $nodeTraverserFactory;
 
     /** @var Definition[] */
-    private array $definitions = [];
+    private array $definitions;
 
     public function __construct()
     {
