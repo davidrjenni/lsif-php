@@ -45,6 +45,32 @@ jobs:
         env:
           XDEBUG_MODE: coverage
 
+  lint:
+    name: "Lint"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2"
+
+      - name: "Validate"
+        uses: php-actions/composer@v6
+        with:
+          php_version: 8.1
+          php_extensions: json
+          version: 2
+          command: validate
+
+      - name: "Install dependencies"
+        uses: php-actions/composer@v6
+        with:
+          php_version: 8.1
+          php_extensions: json
+          version: 2
+
+      - name: "PHPStan"
+        uses: php-actions/phpstan@v3
+
   lsif:
     name: "LSIF"
 
