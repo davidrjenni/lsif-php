@@ -32,7 +32,7 @@ abstract class Element implements JsonSerializable
         return $this->id;
     }
 
-    /** @return array<string, int|string> */
+    /** @return array<string, int|string|JsonSerializable|int[]|array<string, HoverResultContent[]>> */
     public function jsonSerialize(): array
     {
         return [
