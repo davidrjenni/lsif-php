@@ -19,9 +19,9 @@ class Class4
 
     private function c4m3(): Class1
     {
-        $this->c4m2()->c4m4()->c3m1();
+        self::c4m2()->c4m4()->c3m1();
 
-        return $this->c4m2()->c4m4()->c3p1;
+        return self::c4m2()->c4m4()->c3p1;
     }
 
     private function c4m4(): Class3

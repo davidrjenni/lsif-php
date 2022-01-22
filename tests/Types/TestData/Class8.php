@@ -12,7 +12,7 @@ class Class8
         C8C1 = 23,
         C8C2 = 42;
 
-    /** @var Class7 $c8p1 is a test property */
+    /** @param  Class7  $c8p1  is a test property */
     public function __construct(private Class7 $c8p1)
     {
     }
@@ -31,7 +31,7 @@ class Class8
 
         $c8v4 = function (Class1 $x) use ($c8v3): string {
             $c8v4v1 = $x->c1m1();
-            $c8v3();
+            $c8v3($c8v4v1::c2m2());
 
             $c8v4v2 = new class('test')
             {
