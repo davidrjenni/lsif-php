@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LsifPhp\Indexer;
 
+use LsifPhp\Protocol\HoverResultContent;
 use LsifPhp\Protocol\MarkedString;
 use LsifPhp\Protocol\MarkupContent;
 use LogicException;
@@ -36,7 +37,7 @@ use function str_replace;
 final class HoverContent
 {
 
-    /** @return HoverContent[] */
+    /** @return HoverResultContent[] */
     public static function create(Definition $def, string $languageId): array
     {
         $info = self::createInfo($def->def());
