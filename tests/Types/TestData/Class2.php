@@ -10,6 +10,7 @@ class Class2
 
     public function c2m1(): void
     {
+        $this->c2m3([]);
     }
 
     public static function c2m2(): Class1
@@ -17,6 +18,7 @@ class Class2
         return new Class1();
     }
 
+    /** @param  string[]  $c2m3p1 */
     private function c2m3(array $c2m3p1): void
     {
         foreach ($c2m3p1 as $k => $v) {

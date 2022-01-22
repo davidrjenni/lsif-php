@@ -26,6 +26,6 @@ class Class4
 
     private function c4m4(): Class3
     {
-        return new Class3(new Class1());
+        return new Class3($this->c4m3());
     }
 }

@@ -57,6 +57,7 @@ class Class8
 
     public function c8m3(): void
     {
-        $this->c8p1->c7m4()->c2m1();;
+        $this->c8m1();
+        $this->c8p1->c7m4()->c2m1();
     }
 }
