@@ -14,6 +14,7 @@ use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\PropertyFetch;
 use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Expr\Variable;
+use PhpParser\Node\Identifier;
 use PhpParser\Node\Stmt;
 use PhpParser\NodeFinder;
 use PHPUnit\Framework\TestCase;
@@ -162,7 +163,7 @@ final class TypeCollectorTest extends TestCase
     {
         $expr = $this->nodeFinder->findFirst(
             $this->stmts[$filename],
-            fn (Node $n): bool => $n instanceof PropertyFetch && $n->name->name === $name
+            fn (Node $n): bool => $n instanceof PropertyFetch && $this->isIdentifierName($n->name, $name)
         );
 
         $this->assertNotNull($expr);
@@ -174,7 +175,7 @@ final class TypeCollectorTest extends TestCase
     {
         $expr = $this->nodeFinder->findFirst(
             $this->stmts[$filename],
-            fn (Node $n): bool => $n instanceof StaticCall && $n->name->name === $name
+            fn (Node $n): bool => $n instanceof StaticCall && $this->isIdentifierName($n->name, $name)
         );
 
         $this->assertNotNull($expr);
@@ -186,11 +187,16 @@ final class TypeCollectorTest extends TestCase
     {
         $expr = $this->nodeFinder->findFirst(
             $this->stmts[$filename],
-            fn (Node $n): bool => $n instanceof MethodCall && $n->name->name === $name
+            fn (Node $n): bool => $n instanceof MethodCall && $this->isIdentifierName($n->name, $name)
         );
 
         $this->assertNotNull($expr);
         $this->assertInstanceOf(Expr::class, $expr);
         return $expr;
+    }
+
+    private function isIdentifierName(Node $n, string $name): bool
+    {
+        return $n instanceof Identifier && $n->name === $name;
     }
 }
