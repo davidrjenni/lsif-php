@@ -17,14 +17,11 @@ final class Composer
     public static function parse(string $projectRoot): Composer
     {
         $composerFile = $projectRoot . DIRECTORY_SEPARATOR . 'composer.json';
-        return new Composer(
-            $composerFile,
-            json_decode(FileReader::read($composerFile), true),
-        );
+        return new Composer(json_decode(FileReader::read($composerFile), true));
     }
 
     /** @param  array<string, mixed>  $composer */
-    public function __construct(private string $composerFile, private array $composer)
+    public function __construct(private array $composer)
     {
     }
 
