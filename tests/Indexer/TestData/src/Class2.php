@@ -13,4 +13,9 @@ final class Class1
     {
         $this->c1p1 = $c1m1a1;
     }
+
+    protected function c1m1(): Class1
+    {
+        return $this->c1p1;
+    }
 }

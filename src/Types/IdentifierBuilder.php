@@ -39,7 +39,10 @@ final class IdentifierBuilder
             $name = $node->toString();
             switch ($name) {
                 case 'parent':
-                    return self::fqClassName(ClassLikeUtil::nearestClassLike($node)->extends);
+                    $classLike = ClassLikeUtil::nearestClassLike($node);
+                    if (isset($classLike->extends)) {
+                        return self::fqClassName($classLike->extends);
+                    }
                 case 'self':
                 case 'static':
                     $node = ClassLikeUtil::nearestClassLike($node);
