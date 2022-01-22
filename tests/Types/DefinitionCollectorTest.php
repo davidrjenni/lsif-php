@@ -40,8 +40,13 @@ final class DefinitionCollectorTest extends TestCase
         /** @var SplFileInfo $f */
         foreach ($files as $f) {
             if ($f->getExtension() === 'php') {
-                $contents = FileReader::read($f->getRealPath());
+                $filename = $f->getRealPath();
+                $this->assertNotFalse($filename);
+
+                $contents = FileReader::read($filename);
                 $stmts = $parser->parse($contents);
+                $this->assertNotNull($stmts);
+
                 $definitionCollector->collect($i, $stmts);
                 $this->documents[$f->getFilename()] = $i;
                 $i++;
