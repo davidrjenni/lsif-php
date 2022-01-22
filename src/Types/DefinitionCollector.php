@@ -170,10 +170,12 @@ final class DefinitionCollector
 
     private function collectForeach(int $docId, Foreach_ $f): void
     {
-        if ($f->keyVar !== null) {
+        if ($f->keyVar !== null && $f->keyVar instanceof Variable) {
             $this->collectVar($docId, $f->keyVar);
         }
-        $this->collectVar($docId, $f->valueVar);
+        if ($f->valueVar instanceof Variable) {
+            $this->collectVar($docId, $f->valueVar);
+        }
     }
 
     private function collectVar(int $docId, Variable $var, ?Doc $doc = null): void
