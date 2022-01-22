@@ -1,0 +1,8 @@
+parameters:
+  level: 6
+  paths:
+    - bin
+    - src
+    - tests
+  ignoreErrors:
+    - '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assert.*$#'
