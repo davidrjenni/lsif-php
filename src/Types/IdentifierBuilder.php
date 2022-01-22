@@ -61,7 +61,7 @@ final class IdentifierBuilder
 
     private static function classLikeName(ClassLike $node): string
     {
-        return !isset($node->namespacedName) // @phpstan-ignore-line
+        return !isset($node->namespacedName)
             ? "anon-class-{$node->getStartTokenPos()}"
             : $node->namespacedName->toString();
     }
