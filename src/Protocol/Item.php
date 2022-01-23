@@ -10,7 +10,6 @@ use function in_array;
 
 final class Item extends Edge
 {
-
     public const PROPERTY_DEFINITIONS = 'definitions';
 
     public const PROPERTY_REFERENCES = 'references';

@@ -6,6 +6,5 @@ namespace Tests\Types\TestData;
 
 interface Interface1
 {
-
     public function i1m1(): Class1;
 }

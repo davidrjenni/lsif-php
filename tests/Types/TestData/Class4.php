@@ -6,7 +6,6 @@ namespace Tests\Types\TestData;
 
 class Class4
 {
-
     public function c4m1(): self
     {
         return self::c4m2();

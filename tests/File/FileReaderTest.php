@@ -10,7 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 final class FileReaderTest extends TestCase
 {
-
     public function testRead(): void
     {
         $contents = FileReader::read(__DIR__ . DIRECTORY_SEPARATOR . 'testdata' . DIRECTORY_SEPARATOR . 'test-file.txt');

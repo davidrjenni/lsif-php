@@ -8,7 +8,6 @@ use JsonSerializable;
 
 final class RangeTag implements JsonSerializable
 {
-
     public function __construct(
         private string $type,
         private string $text,

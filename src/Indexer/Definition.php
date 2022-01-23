@@ -7,7 +7,6 @@ namespace LsifPhp\Indexer;
 /** Definition represents an LSIF definition. */
 final class Definition
 {
-
     /** @var array<int, int[]> */
     private array $referenceRangeIds;
 

@@ -10,7 +10,6 @@ use function in_array;
 
 final class MarkupContent implements HoverResultContent
 {
-
     public const KIND_MARKDOWN = 'markdown';
 
     public const KIND_PLAINTEXT = 'plaintext';

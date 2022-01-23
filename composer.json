@@ -39,10 +39,11 @@
         "phpstan/phpstan-php-parser": "^1.1",
         "phpstan/phpstan-phpunit": "^1.0",
         "phpstan/phpstan-strict-rules": "^1.1",
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.5",
+        "squizlabs/php_codesniffer": "^3.6"
     },
     "scripts": {
-        "lint": "phpstan",
+        "lint": ["phpcs", "phpstan"],
         "test": "phpunit"
     }
 }

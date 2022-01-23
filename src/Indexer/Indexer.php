@@ -39,7 +39,6 @@ use function count;
 
 final class Indexer
 {
-
     private const LANGUAGE_PHP = 'php';
 
     private Parser $parser;

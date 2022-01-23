@@ -15,7 +15,6 @@ use PhpParser\NodeVisitorAbstract;
 /** NodeTraverserFactory is used to create AST traversers. */
 final class NodeTraverserFactory
 {
-
     private ParentConnectingVisitor $parentConnectingVisitor;
 
     private NameResolver $nameResolver;
@@ -38,9 +37,8 @@ final class NodeTraverserFactory
         $traverser->addVisitor($this->nameResolver);
         $traverser->addVisitor($this->parentConnectingVisitor);
         $traverser->addVisitor(
-            new class($newThis, $visitor, $args) extends NodeVisitorAbstract
+            new class ($newThis, $visitor, $args) extends NodeVisitorAbstract
             {
-
                 /** @param  mixed[]  $args */
                 public function __construct(
                     private object $newThis,

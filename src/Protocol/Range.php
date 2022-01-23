@@ -6,7 +6,6 @@ namespace LsifPhp\Protocol;
 
 final class Range extends Vertex
 {
-
     private RangeData $rangeData;
 
     public function __construct(

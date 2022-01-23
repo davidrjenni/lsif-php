@@ -6,7 +6,6 @@ namespace LsifPhp\Protocol;
 
 final class TextDocumentReference extends Edge
 {
-
     public function __construct(
         int $id,
         private int $outV,

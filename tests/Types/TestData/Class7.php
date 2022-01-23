@@ -6,7 +6,6 @@ namespace Tests\Types\TestData;
 
 class Class7 extends Class5
 {
-
     private Interface2 $c7p1;
 
     public function __construct(Interface2 $c7p1)

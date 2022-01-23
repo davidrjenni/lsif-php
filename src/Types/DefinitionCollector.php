@@ -24,7 +24,6 @@ use PhpParser\Node\Stmt\PropertyProperty;
 /** DefinitionCollector collects identifier definition information from AST nodes. */
 final class DefinitionCollector
 {
-
     private NodeTraverserFactory $nodeTraverserFactory;
 
     /** @var Definition[] */

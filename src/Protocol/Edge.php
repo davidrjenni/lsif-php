@@ -11,7 +11,6 @@ use function in_array;
 
 abstract class Edge extends Element
 {
-
     public const LABEL_CONTAINS = 'contains';
 
     public const LABEL_NEXT = 'next';

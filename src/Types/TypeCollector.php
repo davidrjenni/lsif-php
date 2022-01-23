@@ -39,7 +39,6 @@ use function count;
 /** TypeCollector collects types of expressions which evaluate to named types. */
 final class TypeCollector
 {
-
     /** @var array<string, string[]> */
     private array $types;
 
@@ -55,7 +54,7 @@ final class TypeCollector
     /**
      * Returns the fully qualified names of the types to which the expression
      * can evaluate to, or an empty array for unknown or unnamed types.
-     * NOTE: call `collect` first. 
+     * NOTE: call `collect` first.
      *
      * @return string[]
      */

@@ -6,7 +6,6 @@ namespace LsifPhp\Protocol;
 
 final class MonikerEdge extends Edge
 {
-
     public function __construct(int $id, private int $outV, private int $inV)
     {
         parent::__construct($id, Edge::LABEL_MONIKER_EDGE);

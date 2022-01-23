@@ -14,7 +14,6 @@ use const JSON_UNESCAPED_SLASHES;
 /** Emitter emits LSIF data. */
 final class Emitter
 {
-
     private int $id;
 
     /** @var Element[] */

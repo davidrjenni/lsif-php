@@ -11,7 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 final class IndexerTest extends TestCase
 {
-
     private const PROJECT_ROOT = __DIR__  . DIRECTORY_SEPARATOR . 'TestData';
 
     private Emitter $emitter;
@@ -27,7 +26,7 @@ final class IndexerTest extends TestCase
         $this->indexer = new Indexer(self::PROJECT_ROOT, $this->emitter, $toolInfo);
     }
 
-    function testIndex(): void
+    public function testIndex(): void
     {
         $this->indexer->index();
         $lsif = $this->emitter->write();

@@ -10,7 +10,6 @@ use PhpParser\Node;
 /** Definition represents the defintion of an identifier. */
 final class Definition
 {
-
     public function __construct(
         private int $docId,
         private Node $name,

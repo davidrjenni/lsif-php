@@ -9,7 +9,6 @@ use PHPUnit\Framework\TestCase;
 
 final class ComposerTest extends TestCase
 {
-
     private const PROJECT_ROOT = __DIR__  . DIRECTORY_SEPARATOR . 'testdata' . DIRECTORY_SEPARATOR;
 
     public function testSourceDirs(): void

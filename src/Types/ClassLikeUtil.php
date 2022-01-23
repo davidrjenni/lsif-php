@@ -10,7 +10,6 @@ use PhpParser\Node\Stmt\ClassLike;
 /** ClassLikeUtil provides utility methods to retrieve class like AST nodes.  */
 final class ClassLikeUtil
 {
-
     /** Returns the nearest class like parent node. */
     public static function nearestClassLike(Node $node): ?ClassLike
     {

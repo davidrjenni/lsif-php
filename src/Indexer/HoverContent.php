@@ -36,7 +36,6 @@ use function str_replace;
 /** HoverContent provides methods to create hover content for definitions. */
 final class HoverContent
 {
-
     /** @return HoverResultContent[] */
     public static function create(Definition $def, string $languageId): array
     {

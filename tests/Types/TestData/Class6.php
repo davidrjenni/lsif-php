@@ -6,7 +6,6 @@ namespace Tests\Types\TestData;
 
 class Class6
 {
-
     private AbstractClass1 $c6p1;
 
     public function __construct(AbstractClass1 $c6p1)

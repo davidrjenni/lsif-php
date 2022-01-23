@@ -11,7 +11,6 @@ use function is_file;
 
 final class FileReader
 {
-
     public static function read(string $filename): string
     {
         if (!is_file($filename)) {

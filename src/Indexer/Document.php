@@ -9,7 +9,6 @@ use PhpParser\Node\Stmt;
 /** Document represents an LSIF document. */
 final class Document
 {
-
     /** @var int[] */
     private array $definitionRangeIds;
 

@@ -6,7 +6,6 @@ namespace LsifPhp\Protocol;
 
 final class MarkedString implements HoverResultContent
 {
-
     public function __construct(private string $language, private string $value)
     {
     }

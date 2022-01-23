@@ -6,7 +6,6 @@ namespace Tests\Types\TestData;
 
 class Class8
 {
-
     /** Class8 constants */
     public const
         C8C1 = 23,
@@ -33,9 +32,8 @@ class Class8
             $c8v4v1 = $x->c1m1();
             $c8v3($c8v4v1::c2m2());
 
-            $c8v4v2 = new class('test')
+            $c8v4v2 = new class ('test')
             {
-
                 private string $c8v4v2p1;
 
                 public function __construct(string $c8v4v2p1)

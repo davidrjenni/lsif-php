@@ -6,7 +6,6 @@ namespace LsifPhp\Protocol;
 
 final class MetaData extends Vertex
 {
-
     private const VERSION = '0.4.3';
 
     private const POSITION_ENCODING = 'utf-16';

@@ -6,7 +6,6 @@ namespace LsifPhp\Protocol;
 
 final class Document extends Vertex
 {
-
     public function __construct(int $id, private string $uri, private string $languageId)
     {
         parent::__construct($id, Vertex::LABEL_DOCUMENT);

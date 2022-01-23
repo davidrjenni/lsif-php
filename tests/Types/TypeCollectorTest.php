@@ -24,7 +24,6 @@ use SplFileInfo;
 
 final class TypeCollectorTest extends TestCase
 {
-
     private const TEST_DATA_DIRECTORY = __DIR__ . DIRECTORY_SEPARATOR . 'TestData';
 
     private TypeCollector $typeCollector;

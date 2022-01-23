@@ -17,7 +17,6 @@ use function explode;
 
 final class DefinitionCollectorTest extends TestCase
 {
-
     /** @var array<string, int> */
     private array $documents;
 
@@ -62,47 +61,47 @@ final class DefinitionCollectorTest extends TestCase
     public function testCollectDefinitions(): void
     {
         $this->assertDefinition('AbstractClass1', 7, true);
-        $this->assertDefinition('AbstractClass1::ac1m1()', 10, true);
-        $this->assertDefinition('AbstractClass1::ac1m2()', 12, true);
+        $this->assertDefinition('AbstractClass1::ac1m1()', 9, true);
+        $this->assertDefinition('AbstractClass1::ac1m2()', 11, true);
 
         $this->assertDefinition('Interface1', 7, true);
-        $this->assertDefinition('Interface1::i1m1()', 10, true);
+        $this->assertDefinition('Interface1::i1m1()', 9, true);
 
         $this->assertDefinition('Interface2', 7, true);
 
         $this->assertDefinition('Class1', 7, true);
-        $this->assertDefinition('Class1::c1m1()', 10, true);
+        $this->assertDefinition('Class1::c1m1()', 9, true);
 
         $this->assertDefinition('Class2', 8, true, 'Class2 is a class for testing');
-        $this->assertDefinition('Class2::c2m1()', 11, true);
-        $this->assertDefinition('Class2::c2m2()', 16, true);
-        $this->assertDefinition('Class2::c2m3()::k', 24, false);
-        $this->assertDefinition('Class2::c2m3()::v', 24, false);
-        $this->assertDefinition('Class2::c2m3()::w', 28, false);
-        $this->assertDefinition('Class2::c2m3()::i', 32, false);
+        $this->assertDefinition('Class2::c2m1()', 10, true);
+        $this->assertDefinition('Class2::c2m2()', 15, true);
+        $this->assertDefinition('Class2::c2m3()::k', 23, false);
+        $this->assertDefinition('Class2::c2m3()::v', 23, false);
+        $this->assertDefinition('Class2::c2m3()::w', 27, false);
+        $this->assertDefinition('Class2::c2m3()::i', 31, false);
 
-        $this->assertDefinition('Class3::c3p1', 10, true);
+        $this->assertDefinition('Class3::c3p1', 9, true);
 
-        $this->assertDefinition('Class4::c4m4()', 27, false);
+        $this->assertDefinition('Class4::c4m4()', 26, false);
 
-        $this->assertDefinition('Class7::c7p1', 10, false);
-        $this->assertDefinition('Class7::__construct()::c7p1', 12, false);
+        $this->assertDefinition('Class7::c7p1', 9, false);
+        $this->assertDefinition('Class7::__construct()::c7p1', 11, false);
 
-        $this->assertDefinition('Class8::C8C2', 13, true, 'Class8 constants');
-        $this->assertDefinition('Class8::__construct()::c8p1', 16, false);
-        $this->assertDefinition('Class8::c8p1', 16, false);
-        $this->assertDefinition('Class8::c8m1()', 20, false);
-        $this->assertDefinition('Class8::c8m2()::c8v2', 28, false);
-        $this->assertDefinition('Class8::c8m2()::anon-func-131()::c8v3p1', 30, false);
-        $this->assertDefinition('Class8::c8m2()::anon-func-152()::c8v4v1', 33, false);
+        $this->assertDefinition('Class8::C8C2', 12, true, 'Class8 constants');
+        $this->assertDefinition('Class8::__construct()::c8p1', 15, false);
+        $this->assertDefinition('Class8::c8p1', 15, false);
+        $this->assertDefinition('Class8::c8m1()', 19, false);
+        $this->assertDefinition('Class8::c8m2()::c8v2', 27, false);
+        $this->assertDefinition('Class8::c8m2()::anon-func-131()::c8v3p1', 29, false);
+        $this->assertDefinition('Class8::c8m2()::anon-func-152()::c8v4v1', 32, false);
 
-        $this->assertDefinition('Class8::c8m2()::anon-func-152()::anon-class-198::c8v4v2p1', 39, false);
-        $this->assertDefinition('Class8::c8m2()::anon-func-152()::anon-class-198::__construct()', 41, true);
-        $this->assertDefinition('Class8::c8m2()::anon-func-152()::anon-class-198::c8v4v2m1()', 46, true);
+        $this->assertDefinition('Class8::c8m2()::anon-func-152()::anon-class-198::c8v4v2p1', 37, false);
+        $this->assertDefinition('Class8::c8m2()::anon-func-152()::anon-class-198::__construct()', 39, true);
+        $this->assertDefinition('Class8::c8m2()::anon-func-152()::anon-class-198::c8v4v2m1()', 44, true);
 
-        $this->assertDefinition('Interface1::i1m1()', 10, true);
+        $this->assertDefinition('Interface1::i1m1()', 9, true);
 
-        $this->assertDefinition('Trait1::t1m1()', 12, true);
+        $this->assertDefinition('Trait1::t1m1()', 11, true);
         $this->assertDefinition('Trait2::t2m1()', 11, true);
         $this->assertDefinition('Trait2::t2m1()::v1', 13, false);
     }

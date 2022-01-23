@@ -7,7 +7,6 @@ namespace Tests\Types\TestData;
 /** Class2 is a class for testing. */
 class Class2
 {
-
     public function c2m1(): void
     {
         $this->c2m3([]);

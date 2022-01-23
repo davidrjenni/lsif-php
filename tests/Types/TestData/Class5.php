@@ -18,7 +18,7 @@ class Class5 extends AbstractClass1
         return $v1;
     }
 
-    protected final function ac1m2(): Class3
+    final protected function ac1m2(): Class3
     {
         return $this->ac1m1();
     }

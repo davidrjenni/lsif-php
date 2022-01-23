@@ -12,7 +12,6 @@ use function json_decode;
 /** Composer provides methods to parse composer files. */
 final class Composer
 {
-
     /** Parses the composer.json file at the given project root. */
     public static function parse(string $projectRoot): Composer
     {

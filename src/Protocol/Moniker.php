@@ -10,7 +10,6 @@ use function in_array;
 
 final class Moniker extends Vertex
 {
-
     public const KIND_EXPORT = 'export';
 
     public const KIND_IMPORT = 'import';

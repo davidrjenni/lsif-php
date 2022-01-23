@@ -8,7 +8,6 @@ use JsonSerializable;
 
 final class RangeData implements JsonSerializable
 {
-
     public function __construct(private Pos $start, private Pos $end)
     {
     }

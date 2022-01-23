@@ -6,7 +6,6 @@ namespace Tests\Types\TestData;
 
 class Class3
 {
-
     public Class1 $c3p1;
 
     public function __construct(Class1 $p1)

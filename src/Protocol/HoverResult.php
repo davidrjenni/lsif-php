@@ -6,7 +6,6 @@ namespace LsifPhp\Protocol;
 
 final class HoverResult extends Vertex
 {
-
     /** @param  HoverResultContent[]  $content */
     public function __construct(int $id, private array $content)
     {

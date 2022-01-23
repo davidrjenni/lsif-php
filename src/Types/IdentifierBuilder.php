@@ -12,7 +12,6 @@ use PhpParser\Node\Stmt\ClassLike;
 /** IdentifierBuilder helps to construct fully qualified names from AST nodes. */
 final class IdentifierBuilder
 {
-
     /** Returns the fully qualified name of the given node and initial name. */
     public static function fqName(Node $node, string $name): string
     {
@@ -43,6 +42,7 @@ final class IdentifierBuilder
                     if (isset($classLike->extends)) {
                         return self::fqClassName($classLike->extends);
                     }
+                    // fallthrough
                 case 'self':
                 case 'static':
                     $node = ClassLikeUtil::nearestClassLike($node);

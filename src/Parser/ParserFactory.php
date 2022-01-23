@@ -11,7 +11,6 @@ use PhpParser\ParserFactory as PhpParserFactory;
 /** ParserFactory is used to create PHP parsers. */
 final class ParserFactory
 {
-
     /** Creates a PHP parser, configured to produce AST nodes with position information. */
     public static function create(): Parser
     {

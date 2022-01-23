@@ -13,7 +13,6 @@ use function strrpos;
 
 final class Pos implements JsonSerializable
 {
-
     public static function start(Node $node, string $code): Pos
     {
         return new Pos(
