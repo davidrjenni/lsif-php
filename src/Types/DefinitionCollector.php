@@ -63,7 +63,7 @@ final class DefinitionCollector
             ->traverse($stmts);
     }
 
-    public function collectDefinition(int $docId, Node $node): void
+    private function collectDefinition(int $docId, Node $node): void
     {
         if ($node instanceof ClassLike && $node->name !== null) {
             $this->collectClassLikeDefinition($docId, $node);
