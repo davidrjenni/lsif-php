@@ -1,0 +1,86 @@
+name: CI
+
+on: [push]
+
+jobs:
+  test:
+    name: Test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        php: ['8.0', '8.1']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: xdebug
+      - name: Validate composer
+        run: composer validate
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress
+      - name: Test
+        run: vendor/bin/phpunit --coverage-text --colors=never
+        env:
+          XDEBUG_MODE: coverage
+
+  lint-phpstan:
+    name: PHPStan
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        php: ['8.0', '8.1']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+      - name: Validate composer
+        run: composer validate
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress
+      - name: PHPStan
+        run: vendor/bin/phpstan
+
+  lint-phpcs:
+    name: PHP CodeSniffer
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        php: ['8.0', '8.1']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+      - name: Validate composer
+        run: composer validate
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress
+      - name: PHP CodeSniffer
+        run: vendor/bin/phpcs --no-colors
+
+  lsif:
+    name: LSIF
+    needs: [test, lint-phpstan, lint-phpcs]
+    if: github.repository == 'davidrjenni/lsif-php'
+    runs-on: ubuntu-latest
+    container: davidrjenni/lsif-php:main
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Generate LSIF data
+        run: lsif-php > dump.lsif
+      - name: Upload LSIF data
+        run: src lsif upload -github-token=${{ secrets.GITHUB_TOKEN }}
