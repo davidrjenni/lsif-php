@@ -15,6 +15,4 @@ $toolInfo = new ToolInfo('lsif-php', '0.0.1', \array_splice($argv, 1));
 $emitter = new Emitter();
 $indexer = new Indexer($projectRoot, $emitter, $toolInfo);
 $indexer->index();
-
-$lsif = $emitter->write();
-echo ($lsif . "\n");
+$emitter->write();

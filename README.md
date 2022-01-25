@@ -40,10 +40,10 @@ jobs:
     runs-on: ubuntu-latest
     container: davidrjenni/lsif-php:main
     steps:
-      - uses: "actions/checkout@v2"
-      - name: "Generate LSIF data"
-        run: lsif-php > dump.lsif
-      - name: "Upload LSIF data"
+      - uses: actions/checkout@v2
+      - name: Generate LSIF data
+        run: lsif-php
+      - name: Upload LSIF data
         run: src lsif upload -github-token=${{ secrets.GITHUB_TOKEN }}
 ```
 
@@ -58,7 +58,7 @@ lsif-job:
     reports:
       lsif: dump.lsif
   scripts:
-    - lsif-php > dump.lsif
+    - lsif-php
     - src lsif upload
 ```
 
@@ -71,6 +71,6 @@ the LSIF data and upload it:
 
 ```bash
 $ composer require --dev davidrjenni/lsif-php
-$ vendor/bin/lsif-php > dump.lsif
+$ vendor/bin/lsif-php
 $ src lsif upload
 ```

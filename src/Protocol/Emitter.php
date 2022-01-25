@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LsifPhp\Protocol;
 
-use function array_map;
-use function join;
+use LsifPhp\File\FileWriter;
+
 use function json_encode;
 
 use const JSON_THROW_ON_ERROR;
@@ -16,24 +16,17 @@ final class Emitter
 {
     private int $id;
 
-    /** @var Element[] */
-    private array $elements;
+    private FileWriter $writer;
 
-    public function __construct()
+    public function __construct(string $filename = 'dump.lsif')
     {
         $this->id = 0;
-        $this->elements = [];
+        $this->writer = new FileWriter($filename);
     }
 
-    public function write(): string
+    public function write(): void
     {
-        return join(
-            "\n",
-            array_map(
-                fn (Element $element): string => json_encode($element, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR),
-                $this->elements
-            )
-        );
+        $this->writer->close();
     }
 
     public function emitMetaData(string $projectRoot, ToolInfo $toolInfo): void
@@ -148,7 +141,8 @@ final class Emitter
 
     private function emit(Element $element): int
     {
-        $this->elements[] = $element;
+        $line = json_encode($element, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+        $this->writer->writeLn($line);
 
         return $element->id();
     }

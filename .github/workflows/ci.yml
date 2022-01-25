@@ -81,7 +81,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Generate LSIF data
-        run: lsif-php > dump.lsif
+        run: lsif-php
       - name: Upload LSIF data
         run: src lsif upload -github-token=${{ secrets.GITHUB_TOKEN }}
 

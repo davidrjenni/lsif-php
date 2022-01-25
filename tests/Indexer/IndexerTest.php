@@ -4,16 +4,22 @@ declare(strict_types=1);
 
 namespace Tests\Indexer;
 
+use LsifPhp\File\FileReader;
 use LsifPhp\Indexer\Indexer;
 use LsifPhp\Protocol\Emitter;
 use LsifPhp\Protocol\ToolInfo;
 use PHPUnit\Framework\TestCase;
+
+use function tempnam;
+use function sys_get_temp_dir;
 
 use const DIRECTORY_SEPARATOR;
 
 final class IndexerTest extends TestCase
 {
     private const PROJECT_ROOT = __DIR__  . DIRECTORY_SEPARATOR . 'TestData';
+
+    private string $tmpfile;
 
     private Emitter $emitter;
 
@@ -23,15 +29,22 @@ final class IndexerTest extends TestCase
     {
         parent::setUp();
 
+        $tmpfile = tempnam(sys_get_temp_dir(), 'lsif-php-indexer-test');
+        $this->assertNotFalse($tmpfile);
+
+        $this->tmpfile = $tmpfile;
+
         $toolInfo = new ToolInfo('lsif-php', 'dev', []);
-        $this->emitter = new Emitter();
+        $this->emitter = new Emitter($this->tmpfile);
         $this->indexer = new Indexer(self::PROJECT_ROOT, $this->emitter, $toolInfo);
     }
 
     public function testIndex(): void
     {
         $this->indexer->index();
-        $lsif = $this->emitter->write();
+        $this->emitter->write();
+
+        $lsif = FileReader::read($this->tmpfile);
 
         $this->assertStringContainsString(
             '{"id":1,"type":"vertex","label":"metaData"',
