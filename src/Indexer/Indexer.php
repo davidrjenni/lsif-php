@@ -37,6 +37,8 @@ use function array_merge;
 use function array_unique;
 use function count;
 
+use const DIRECTORY_SEPARATOR;
+
 final class Indexer
 {
     private const LANGUAGE_PHP = 'php';

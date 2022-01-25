@@ -15,6 +15,8 @@ use SplFileInfo;
 
 use function explode;
 
+use const DIRECTORY_SEPARATOR;
+
 final class DefinitionCollectorTest extends TestCase
 {
     /** @var array<string, int> */

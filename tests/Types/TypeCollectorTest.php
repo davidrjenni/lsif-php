@@ -22,6 +22,8 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
 
+use const DIRECTORY_SEPARATOR;
+
 final class TypeCollectorTest extends TestCase
 {
     private const TEST_DATA_DIRECTORY = __DIR__ . DIRECTORY_SEPARATOR . 'TestData';

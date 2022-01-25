@@ -9,6 +9,8 @@ use LsifPhp\File\FileReader;
 use function array_values;
 use function json_decode;
 
+use const DIRECTORY_SEPARATOR;
+
 /** Composer provides methods to parse composer files. */
 final class Composer
 {

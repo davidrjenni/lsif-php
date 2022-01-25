@@ -9,6 +9,8 @@ use LsifPhp\Protocol\Emitter;
 use LsifPhp\Protocol\ToolInfo;
 use PHPUnit\Framework\TestCase;
 
+use const DIRECTORY_SEPARATOR;
+
 final class IndexerTest extends TestCase
 {
     private const PROJECT_ROOT = __DIR__  . DIRECTORY_SEPARATOR . 'TestData';

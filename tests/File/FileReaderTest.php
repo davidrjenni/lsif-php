@@ -8,6 +8,8 @@ use LsifPhp\File\CannotReadFileException;
 use LsifPhp\File\FileReader;
 use PHPUnit\Framework\TestCase;
 
+use const DIRECTORY_SEPARATOR;
+
 final class FileReaderTest extends TestCase
 {
     public function testRead(): void
