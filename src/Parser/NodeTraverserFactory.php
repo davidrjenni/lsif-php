@@ -29,9 +29,8 @@ final class NodeTraverserFactory
      * Creates a new AST traverser.
      *
      * @param  Closure(Node, mixed...): void  $visitor
-     * @param  mixed...                       $args
      */
-    public function create(object $newThis, Closure $visitor, ...$args): NodeTraverserInterface
+    public function create(object $newThis, Closure $visitor, mixed ...$args): NodeTraverserInterface
     {
         $traverser = new NodeTraverser();
         $traverser->addVisitor($this->nameResolver);
