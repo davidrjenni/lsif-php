@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace LsifPhp\File;
 
-use Exception;
-
 use function file_get_contents;
 use function is_file;
 
