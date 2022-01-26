@@ -205,10 +205,10 @@ final class HoverContent
             return "?{$type->type}";
         }
         if ($type instanceof UnionType) {
-            return implode('|', array_map(fn ($t): string => self::typeInfo($t), $type->types));
+            return implode('|', array_map(fn($t): string => self::typeInfo($t), $type->types));
         }
         if ($type instanceof IntersectionType) {
-            return implode('&', array_map(fn ($t): string => self::typeInfo($t), $type->types));
+            return implode('&', array_map(fn($t): string => self::typeInfo($t), $type->types));
         }
         return $type->toString();
     }
@@ -232,7 +232,7 @@ final class HoverContent
     {
         return implode(
             ', ',
-            array_map(fn (Name $name): string => $name->toString(), $names)
+            array_map(fn(Name $name): string => $name->toString(), $names),
         );
     }
 

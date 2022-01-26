@@ -68,7 +68,7 @@ final class TypeCollector
         }
         if ($expr instanceof Match_) {
             return array_merge(
-                ...array_map(fn (MatchArm $a): array => $this->typeExpr($a->body), $expr->arms)
+                ...array_map(fn(MatchArm $a): array => $this->typeExpr($a->body), $expr->arms),
             );
         }
         if ($expr instanceof New_) {

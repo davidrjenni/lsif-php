@@ -152,7 +152,7 @@ final class TypeCollectorTest extends TestCase
     {
         $expr = $this->nodeFinder->findFirst(
             $this->stmts[$filename],
-            fn (Node $n): bool => $n instanceof Variable && $n->name === $name
+            fn(Node $n): bool => $n instanceof Variable && $n->name === $name,
         );
 
         $this->assertNotNull($expr);
@@ -164,7 +164,7 @@ final class TypeCollectorTest extends TestCase
     {
         $expr = $this->nodeFinder->findFirst(
             $this->stmts[$filename],
-            fn (Node $n): bool => $n instanceof PropertyFetch && $this->isIdentifierName($n->name, $name)
+            fn(Node $n): bool => $n instanceof PropertyFetch && $this->isIdentifierName($n->name, $name),
         );
 
         $this->assertNotNull($expr);
@@ -176,7 +176,7 @@ final class TypeCollectorTest extends TestCase
     {
         $expr = $this->nodeFinder->findFirst(
             $this->stmts[$filename],
-            fn (Node $n): bool => $n instanceof StaticCall && $this->isIdentifierName($n->name, $name)
+            fn(Node $n): bool => $n instanceof StaticCall && $this->isIdentifierName($n->name, $name),
         );
 
         $this->assertNotNull($expr);
@@ -188,7 +188,7 @@ final class TypeCollectorTest extends TestCase
     {
         $expr = $this->nodeFinder->findFirst(
             $this->stmts[$filename],
-            fn (Node $n): bool => $n instanceof MethodCall && $this->isIdentifierName($n->name, $name)
+            fn(Node $n): bool => $n instanceof MethodCall && $this->isIdentifierName($n->name, $name),
         );
 
         $this->assertNotNull($expr);
