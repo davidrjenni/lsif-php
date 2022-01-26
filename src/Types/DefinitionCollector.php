@@ -58,7 +58,7 @@ final class DefinitionCollector
                 $this,
                 function (Node $node) use ($docId): void {
                     $this->collectDefinition($docId, $node);
-                }
+                },
             )
             ->traverse($stmts);
     }
@@ -94,7 +94,7 @@ final class DefinitionCollector
             IdentifierBuilder::fqClassName($classLike),
             $classLike,
             true,
-            $classLike->getDocComment()
+            $classLike->getDocComment(),
         );
     }
 
@@ -106,7 +106,7 @@ final class DefinitionCollector
             IdentifierBuilder::fqName($classConst, $const->name->toString()),
             $const,
             !$classConst->isPrivate(),
-            $classConst->getDocComment()
+            $classConst->getDocComment(),
         );
     }
 
@@ -118,7 +118,7 @@ final class DefinitionCollector
             IdentifierBuilder::fqName($property, $prop->name->toString()),
             $prop,
             !$property->isPrivate(),
-            $property->getDocComment()
+            $property->getDocComment(),
         );
     }
 
@@ -130,7 +130,7 @@ final class DefinitionCollector
             IdentifierBuilder::fqName($method, "{$method->name}()"),
             $method,
             !$method->isPrivate(),
-            $method->getDocComment()
+            $method->getDocComment(),
         );
     }
 
@@ -146,7 +146,7 @@ final class DefinitionCollector
                 IdentifierBuilder::fqName($param->getAttribute('parent'), $name->toString()),
                 $param,
                 !((bool) ($param->flags & Class_::MODIFIER_PRIVATE)),
-                $param->getDocComment()
+                $param->getDocComment(),
             );
         }
 
@@ -156,7 +156,7 @@ final class DefinitionCollector
             IdentifierBuilder::fqName($param, $name->toString()),
             $param,
             false,
-            $param->getDocComment()
+            $param->getDocComment(),
         );
     }
 

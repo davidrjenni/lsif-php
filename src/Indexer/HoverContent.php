@@ -46,7 +46,7 @@ final class HoverContent
         if ($comment !== null) {
             $hoverContent[] = new MarkupContent(
                 MarkupContent::KIND_MARKDOWN,
-                self::cleanup($comment->getText())
+                self::cleanup($comment->getText()),
             );
         }
 

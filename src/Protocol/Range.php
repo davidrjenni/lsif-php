@@ -12,7 +12,7 @@ final class Range extends Vertex
         int $id,
         Pos $start,
         Pos $end,
-        private ?RangeTag $tag = null
+        private ?RangeTag $tag = null,
     ) {
         parent::__construct($id, Vertex::LABEL_RANGE);
 

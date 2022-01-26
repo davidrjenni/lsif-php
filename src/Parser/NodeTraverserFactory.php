@@ -51,7 +51,7 @@ final class NodeTraverserFactory
                     $this->visitor->call($this->newThis, $node, ...$this->args);
                     return null;
                 }
-            }
+            },
         );
 
         return $traverser;

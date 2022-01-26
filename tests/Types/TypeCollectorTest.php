@@ -45,7 +45,7 @@ final class TypeCollectorTest extends TestCase
 
         $parser = ParserFactory::create();
         $files = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator(self::TEST_DATA_DIRECTORY)
+            new RecursiveDirectoryIterator(self::TEST_DATA_DIRECTORY),
         );
 
         $definitionCollector = new DefinitionCollector();

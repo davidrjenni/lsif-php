@@ -48,22 +48,22 @@ final class IndexerTest extends TestCase
 
         $this->assertStringContainsString(
             '{"id":1,"type":"vertex","label":"metaData"',
-            $lsif
+            $lsif,
         );
 
         $this->assertStringContainsString(
             '{"id":2,"type":"vertex","label":"project","kind":"php"}',
-            $lsif
+            $lsif,
         );
 
         $this->assertStringContainsString(
             '"type":"vertex","label":"document","uri":"file://' . self::PROJECT_ROOT . '/src/Class1.php","languageId":"php"}',
-            $lsif
+            $lsif,
         );
 
         $this->assertStringContainsString(
             '"type":"vertex","label":"document","uri":"file://' . self::PROJECT_ROOT . '/src/Class2.php","languageId":"php"}',
-            $lsif
+            $lsif,
         );
     }
 }

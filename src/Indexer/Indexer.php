@@ -96,7 +96,7 @@ final class Indexer
 
         foreach ($this->composer->sourceDirs() as $dir) {
             $fileIterator = new RecursiveIteratorIterator(
-                new RecursiveDirectoryIterator($this->projectRoot . DIRECTORY_SEPARATOR . $dir)
+                new RecursiveDirectoryIterator($this->projectRoot . DIRECTORY_SEPARATOR . $dir),
             );
 
             /** @var SplFileInfo $f */
@@ -135,7 +135,7 @@ final class Indexer
             $d = $this->emitDefinition(
                 $def->name(),
                 $this->documents[$def->docId()],
-                HoverContent::create($def, Indexer::LANGUAGE_PHP)
+                HoverContent::create($def, Indexer::LANGUAGE_PHP),
             );
             $this->definitions[$def->identifier()] = $d;
         }
@@ -220,7 +220,7 @@ final class Indexer
                     $this->tryEmitReference($fqName, $doc, $node);
                     return;
                 }
-            }
+            },
         );
     }
 
@@ -268,7 +268,7 @@ final class Indexer
             if (count($doc->definitionRangeIds()) > 0 || count($doc->referenceRangeIds()) > 0) {
                 $this->emitter->emitContains(
                     $doc->id(),
-                    array_unique(array_merge($doc->definitionRangeIds(), $doc->referenceRangeIds()))
+                    array_unique(array_merge($doc->definitionRangeIds(), $doc->referenceRangeIds())),
                 );
             }
         }
@@ -289,7 +289,7 @@ final class Indexer
     {
         return $this->emitter->emitRange(
             Pos::start($node, $doc->code()),
-            Pos::end($node, $doc->code())
+            Pos::end($node, $doc->code()),
         );
     }
 }

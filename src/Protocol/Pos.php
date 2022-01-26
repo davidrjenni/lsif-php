@@ -17,7 +17,7 @@ final class Pos implements JsonSerializable
     {
         return new Pos(
             $node->getStartLine() - 1,
-            self::toColumn($code, $node->getStartFilePos()) - 1
+            self::toColumn($code, $node->getStartFilePos()) - 1,
         );
     }
 
@@ -25,7 +25,7 @@ final class Pos implements JsonSerializable
     {
         return new Pos(
             $node->getEndLine() - 1,
-            self::toColumn($code, $node->getEndFilePos())
+            self::toColumn($code, $node->getEndFilePos()),
         );
     }
 

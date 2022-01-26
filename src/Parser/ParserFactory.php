@@ -27,8 +27,8 @@ final class ParserFactory
                         'startFilePos',
                         'endFilePos',
                     ],
-                ]
-            )
+                ],
+            ),
         );
     }
 }

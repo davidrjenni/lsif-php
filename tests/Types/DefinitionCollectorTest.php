@@ -32,7 +32,7 @@ final class DefinitionCollectorTest extends TestCase
         $definitionCollector = new DefinitionCollector();
         $parser = ParserFactory::create();
         $files = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator(__DIR__ . DIRECTORY_SEPARATOR . 'TestData')
+            new RecursiveDirectoryIterator(__DIR__ . DIRECTORY_SEPARATOR . 'TestData'),
         );
 
         $i = 0;
