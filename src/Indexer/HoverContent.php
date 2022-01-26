@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace LsifPhp\Indexer;
 
+use LogicException;
 use LsifPhp\Protocol\HoverResultContent;
 use LsifPhp\Protocol\MarkedString;
 use LsifPhp\Protocol\MarkupContent;
-use LogicException;
 use LsifPhp\Types\Definition;
 use PhpParser\Node;
 use PhpParser\Node\ComplexType;

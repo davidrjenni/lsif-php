@@ -10,8 +10,8 @@ use LsifPhp\Protocol\Emitter;
 use LsifPhp\Protocol\ToolInfo;
 use PHPUnit\Framework\TestCase;
 
-use function tempnam;
 use function sys_get_temp_dir;
+use function tempnam;
 
 use const DIRECTORY_SEPARATOR;
 
