@@ -1,6 +1,7 @@
 # lsif-php [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/davidrjenni/lsif-php)
 
 [![CI](https://github.com/davidrjenni/lsif-php/actions/workflows/ci.yml/badge.svg)](https://github.com/davidrjenni/lsif-php/actions/workflows/ci.yml)
+[![Coverage](https://codecov.io/gh/davidrjenni/lsif-php/branch/main/graph/badge.svg?token=4NZWCF6LZS)](https://codecov.io/gh/davidrjenni/lsif-php)
 [![License: MIT](https://img.shields.io/github/license/davidrjenni/lsif-php)](https://github.com/davidrjenni/lsif-php/blob/main/LICENSE)
 [![Packagist Version](https://img.shields.io/packagist/v/davidrjenni/lsif-php)](https://packagist.org/packages/davidrjenni/lsif-php)
 [![PHP Version](https://img.shields.io/packagist/php-v/davidrjenni/lsif-php)](https://packagist.org/packages/davidrjenni/lsif-php)

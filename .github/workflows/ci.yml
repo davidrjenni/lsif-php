@@ -23,9 +23,11 @@ jobs:
       - name: Install dependencies
         run: composer install --no-interaction --no-progress
       - name: Test
-        run: vendor/bin/phpunit --coverage-text --colors=never
+        run: vendor/bin/phpunit --coverage-text --coverage-cobertura=coverage.xml --colors=never
         env:
           XDEBUG_MODE: coverage
+      - name: Upload coverage
+        uses: codecov/codecov-action@v2
 
   lint-phpstan:
     name: PHPStan
