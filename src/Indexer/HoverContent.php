@@ -80,7 +80,7 @@ final class HoverContent
             return self::varInfo($node);
         }
 
-        throw new LogicException('Unexpected node type: ' . get_class($node));
+        throw new LogicException('Unexpected node type: ' . $node::class);
     }
 
     private static function classInfo(Class_ $class): string
