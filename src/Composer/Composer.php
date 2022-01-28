@@ -7,6 +7,7 @@ namespace LsifPhp\Composer;
 use LsifPhp\File\FileReader;
 
 use function array_values;
+use function is_string;
 use function json_decode;
 
 use const DIRECTORY_SEPARATOR;
@@ -32,5 +33,13 @@ final class Composer
         $autoloadDirs = array_values($this->composer['autoload']['psr-4'] ?? []);
         $autoloadDevDirs = array_values($this->composer['autoload-dev']['psr-4'] ?? []);
         return array_merge($autoloadDirs, $autoloadDevDirs);
+    }
+
+    public function pkgName(): string
+    {
+        if (!isset($this->composer['name']) || !is_string($this->composer['name'])) {
+            throw new CannotReadComposerPropertyException('name');
+        }
+        return $this->composer['name'];
     }
 }
