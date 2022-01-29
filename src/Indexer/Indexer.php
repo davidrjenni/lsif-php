@@ -43,6 +43,8 @@ final class Indexer
 {
     private const LANGUAGE_PHP = 'php';
 
+    private const COMPOSER_SCHEME = 'composer';
+
     private Parser $parser;
 
     private NodeTraverserFactory $nodeTraverserFactory;
@@ -61,8 +63,14 @@ final class Indexer
     /** @var array<int, Document> */
     private array $documents;
 
+    /** @var array<string, int> */
+    private array $pkgInfoIds;
+
     /** @var array<string, Definition> */
     private array $definitions;
+
+    /** @var array<string, int> */
+    private array $importMonikers;
 
     public function __construct(
         private string $projectRoot,
@@ -76,7 +84,9 @@ final class Indexer
         $this->projectId = -1;
         $this->files = [];
         $this->documents = [];
+        $this->pkgInfoIds = [];
         $this->definitions = [];
+        $this->importMonikers = [];
     }
 
     public function index(): void
@@ -137,6 +147,9 @@ final class Indexer
                 $this->documents[$def->docId()],
                 HoverContent::create($def, Indexer::LANGUAGE_PHP),
             );
+            if ($def->exported()) {
+                $this->emitExportMoniker($d->resultSetId(), $def->identifier());
+            }
             $this->definitions[$def->identifier()] = $d;
         }
     }
@@ -160,6 +173,14 @@ final class Indexer
         return new Definition($doc->id(), $rangeId, $resultSetId);
     }
 
+    private function emitExportMoniker(int $resultSetId, string $fqName): void
+    {
+        $monikerId = $this->emitter->emitExportMoniker(self::COMPOSER_SCHEME, $fqName);
+        $packageId = $this->ensurePackageInformation($this->composer->pkgName(), '');
+        $this->emitter->emitPackageInformationEdge($monikerId, $packageId);
+        $this->emitter->emitMonikerEdge($resultSetId, $monikerId);
+    }
+
     private function emitReferences(): void
     {
         $this->traverseDocumentNodes(
@@ -167,7 +188,7 @@ final class Indexer
                 if ($node instanceof ClassConstFetch && $node->class instanceof Name) {
                     $fqClassName = IdentifierBuilder::fqClassName($node->class);
                     $fqName = "{$fqClassName}::{$node->name}";
-                    $this->tryEmitReference($fqName, $doc, $node->name);
+                    $this->emitReference($fqName, $doc, $node->name);
                     return;
                 }
 
@@ -178,7 +199,7 @@ final class Indexer
                     $types = $this->typeCollector->typeExpr($node->var);
                     foreach ($types as $type) {
                         $fqName = "{$type}::{$node->name}()";
-                        $this->tryEmitReference($fqName, $doc, $node->name);
+                        $this->emitReference($fqName, $doc, $node->name);
                     }
                     return;
                 }
@@ -190,51 +211,45 @@ final class Indexer
                     $types = $this->typeCollector->typeExpr($node->var);
                     foreach ($types as $type) {
                         $fqName = "{$type}::{$node->name}";
-                        $this->tryEmitReference($fqName, $doc, $node->name);
+                        $this->emitReference($fqName, $doc, $node->name);
                     }
                     return;
                 }
 
                 if ($node instanceof Name) {
                     $fqName = IdentifierBuilder::fqClassName($node);
-                    $this->tryEmitReference($fqName, $doc, $node);
+                    $this->emitReference($fqName, $doc, $node);
                     return;
                 }
 
                 if ($node instanceof StaticCall && $node->class instanceof Name && $node->name instanceof Identifier) {
                     $fqClassName = IdentifierBuilder::fqClassName($node->class);
                     $fqName = "{$fqClassName}::{$node->name}()";
-                    $this->tryEmitReference($fqName, $doc, $node->name);
+                    $this->emitReference($fqName, $doc, $node->name);
                     return;
                 }
 
                 if ($node instanceof StaticPropertyFetch && $node->class instanceof Name && $node->name instanceof Identifier) {
                     $fqClassName = IdentifierBuilder::fqClassName($node->class);
                     $fqName = "{$fqClassName}::{$node->name}";
-                    $this->tryEmitReference($fqName, $doc, $node->name);
+                    $this->emitReference($fqName, $doc, $node->name);
                     return;
                 }
 
                 if ($node instanceof Variable && !($node->getAttribute('parent') instanceof Param)) {
                     $fqName = IdentifierBuilder::fqName($node, $node->name);
-                    $this->tryEmitReference($fqName, $doc, $node);
+                    $this->emitReference($fqName, $doc, $node);
                     return;
                 }
             },
         );
     }
 
-    private function tryEmitReference(string $fqName, Document $doc, Identifier|Name|Variable $node): void
+    private function emitReference(string $fqName, Document $doc, Identifier|Name|Variable $name): void
     {
         $def = $this->definitions[$fqName] ?? null;
-        if ($def !== null) {
-            $this->emitReference($doc, $node, $def);
-        }
-    }
-
-    private function emitReference(Document $doc, Identifier|Name|Variable $name, ?Definition $def): void
-    {
         if ($def === null) {
+            $this->emitReferenceToExternalDefinition($name, $doc);
             return;
         }
 
@@ -242,6 +257,33 @@ final class Indexer
         $doc->addReferenceRangeId($rangeId);
         $this->emitter->emitNext($rangeId, $def->resultSetId());
         $def->addReferenceRangeId($doc->id(), $rangeId);
+    }
+
+    private function emitReferenceToExternalDefinition(Identifier|Name|Variable $name, Document $doc): void
+    {
+        if ($name instanceof Variable) {
+            return;
+        }
+
+        $monikerIdentifier = $name->toString();
+        $pkg = $this->composer->dependency($monikerIdentifier);
+        if ($pkg === null) {
+            return;
+        }
+
+        $rangeId = $this->emitRange($name, $doc);
+        $doc->addReferenceRangeId($rangeId);
+
+        $referenceResultId = $this->emitter->emitReferenceResult();
+        $this->emitter->emitTextDocumentReference($rangeId, $referenceResultId);
+        $this->emitter->emitItemOfReferences($referenceResultId, [$rangeId], $doc->id());
+
+        $packageId = $this->ensurePackageInformation($pkg->name(), $pkg->version());
+
+        $monikerId = $this->importMonikers[$monikerIdentifier] ?? $this->emitter->emitImportMoniker(self::COMPOSER_SCHEME, $monikerIdentifier);
+        $this->emitter->emitPackageInformationEdge($monikerId, $packageId);
+
+        $this->emitter->emitMonikerEdge($rangeId, $monikerId);
     }
 
     private function linkItemsToDefinitions(): void
@@ -291,5 +333,14 @@ final class Indexer
             Pos::start($node, $doc->code()),
             Pos::end($node, $doc->code()),
         );
+    }
+
+    private function ensurePackageInformation(string $name, string $version): int
+    {
+        if (!isset($this->pkgInfoIds[$name])) {
+            $pkgId = $this->emitter->emitPackageInformation(self::COMPOSER_SCHEME, $name, $version);
+            $this->pkgInfoIds[$name] = $pkgId;
+        }
+        return $this->pkgInfoIds[$name];
     }
 }
