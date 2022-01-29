@@ -1,0 +1,43 @@
+{
+    "packages": [
+        {
+            "name": "dependency/dep1",
+            "version": "v4.13.2",
+            "autoload": {
+                "psr-4": {
+                    "Dep\\Dep1\\Foo": "src/",
+                    "Dep\\Dep1\\Bar": "bar/"
+                }
+            }
+        },
+        {
+            "name": "dependency/dep2",
+            "version": "2.0.1",
+            "autoload": {
+                "psr-4": {
+                    "Dep\\Dep2\\Baz": "src/"
+                }
+            }
+        }
+    ],
+    "packages-dev": [
+        {
+            "name": "dependency/devdep1",
+            "version": "1.0.1",
+            "autoload": {
+                "psr-4": {
+                    "Dep\\Dev\\Dep1": "src/"
+                }
+            }
+        },
+        {
+            "name": "dependency/devdep2",
+            "version": "v0.7.1",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            }
+        }
+    ]
+}

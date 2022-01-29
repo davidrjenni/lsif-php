@@ -32,6 +32,29 @@ final class ComposerTest extends TestCase
         $composer->pkgName();
     }
 
+    public function testDependency(): void
+    {
+        $composer = Composer::parse(self::PROJECT_ROOT . 'project1');
+
+        $pkg = $composer->dependency("Foo\\Bar");
+        $this->assertNull($pkg);
+
+        $pkg = $composer->dependency("Dep\\Dep1\\Foo\\C1::c1p1");
+        $this->assertEquals('dependency/dep1', $pkg->name());
+        $this->assertEquals('v4.13.2', $pkg->version());
+
+        $pkg = $composer->dependency("Dep\\Dep1\\Bar\\Baz\\C2::c2m1()");
+        $this->assertEquals('dependency/dep1', $pkg->name());
+        $this->assertEquals('v4.13.2', $pkg->version());
+
+        $pkg = $composer->dependency("Dep\\Dep2\\Bar\\C1::c1m1()");
+        $this->assertNull($pkg);
+
+        $pkg = $composer->dependency("Dep\\Dev\\Dep1\\Bar\\Baz\\C2::c2m1()");
+        $this->assertEquals('dependency/devdep1', $pkg->name());
+        $this->assertEquals('1.0.1', $pkg->version());
+    }
+
     public function testSourceDirs(): void
     {
         $tests = [

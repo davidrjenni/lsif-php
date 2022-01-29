@@ -16,8 +16,8 @@ This repository is indexed using itself and available on [Sourcegraph](https://s
 
 ## Requirements
 
-`lsif-php` needs the `composer.json` file of the project
-to index present in the current directory. It uses the
+`lsif-php` needs the `composer.json` and `composer.lock` file of
+the project to index present in the current directory. It uses the
 [`autoload`](https://getcomposer.org/doc/04-schema.md#autoload) and
 [`autoload-dev`](https://getcomposer.org/doc/04-schema.md#autoload-dev)
 properties to determine which directories to scan.
