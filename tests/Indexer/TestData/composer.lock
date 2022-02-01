@@ -1,4 +1,14 @@
 {
-    "packages": [],
+    "packages": [
+        {
+            "name": "davidrjenni/testdep",
+            "version": "v4.13.2",
+            "autoload": {
+                "psr-4": {
+                    "TestProjectDep\\": "src"
+                }
+            }
+        }
+    ],
     "packages-dev": []
 }

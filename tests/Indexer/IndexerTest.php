@@ -65,5 +65,20 @@ final class IndexerTest extends TestCase
             '"type":"vertex","label":"document","uri":"file://' . self::PROJECT_ROOT . '/src/Class2.php","languageId":"php"}',
             $lsif,
         );
+
+        $this->assertStringContainsString(
+            '"type":"vertex","label":"moniker","kind":"export","scheme":"composer","identifier":"TestProject\\\\Class1::foo()"}',
+            $lsif,
+        );
+
+        $this->assertStringContainsString(
+            '"type":"vertex","label":"packageInformation","manager":"composer","name":"davidrjenni/testdep","version":"v4.13.2"}',
+            $lsif,
+        );
+
+        $this->assertStringContainsString(
+            '"type":"vertex","label":"moniker","kind":"import","scheme":"composer","identifier":"TestProjectDep\\\\Foo"}',
+            $lsif,
+        );
     }
 }

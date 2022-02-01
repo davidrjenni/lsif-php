@@ -4,5 +4,7 @@ parameters:
     - bin
     - src
     - tests
+  excludePaths:
+    - tests/Indexer/TestData/*
   ignoreErrors:
     - '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assert.*$#'
