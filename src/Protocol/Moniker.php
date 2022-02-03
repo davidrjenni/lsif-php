@@ -32,7 +32,7 @@ final class Moniker extends Vertex
         parent::__construct($id, Vertex::LABEL_MONIKER);
     }
 
-    /** @return array<string, int|string> */
+    /** @return array<string, mixed> */
     public function jsonSerialize(): array
     {
         return parent::jsonSerialize() + [

@@ -11,7 +11,7 @@ final class Next extends Edge
         parent::__construct($id, Edge::LABEL_NEXT);
     }
 
-    /** @return array<string, int|string> */
+    /** @return array<string, mixed> */
     public function jsonSerialize(): array
     {
         return parent::jsonSerialize() + [

@@ -12,7 +12,7 @@ final class HoverResult extends Vertex
         parent::__construct($id, Vertex::LABEL_HOVER_RESULT);
     }
 
-    /** @return array<string, int|string|array<string, HoverResultContent[]>> */
+    /** @return array<string, mixed> */
     public function jsonSerialize(): array
     {
         return parent::jsonSerialize() + [

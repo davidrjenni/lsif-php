@@ -19,7 +19,7 @@ final class Range extends Vertex
         $this->rangeData = new RangeData($start, $end);
     }
 
-    /** @return array<string, int|string|Pos|RangeTag> */
+    /** @return array<string, mixed> */
     public function jsonSerialize(): array
     {
         $data = parent::jsonSerialize() + $this->rangeData->jsonSerialize();

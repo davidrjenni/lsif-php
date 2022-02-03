@@ -11,7 +11,7 @@ final class TextDocumentHover extends Edge
         parent::__construct($id, Edge::LABEL_TEXT_DOCUMENT_HOVER);
     }
 
-    /** @return array<string, int|string> */
+    /** @return array<string, mixed> */
     public function jsonSerialize(): array
     {
         return parent::jsonSerialize() + [

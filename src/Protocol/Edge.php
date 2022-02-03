@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace LsifPhp\Protocol;
 
 use InvalidArgumentException;
-use JsonSerializable;
 
 use function in_array;
 
@@ -47,7 +46,7 @@ abstract class Edge extends Element
         parent::__construct($id, Element::TYPE_EDGE);
     }
 
-    /** @return array<string, int|string|JsonSerializable|int[]> */
+    /** @return array<string, mixed> */
     public function jsonSerialize(): array
     {
         return parent::jsonSerialize() + ['label' => $this->label];

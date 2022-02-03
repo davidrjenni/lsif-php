@@ -12,7 +12,7 @@ final class Contains extends Edge
         parent::__construct($id, Edge::LABEL_CONTAINS);
     }
 
-    /** @return array<string, int|string|int[]> */
+    /** @return array<string, mixed> */
     public function jsonSerialize(): array
     {
         return parent::jsonSerialize() + [

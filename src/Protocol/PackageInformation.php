@@ -15,7 +15,7 @@ final class PackageInformation extends Vertex
         parent::__construct($id, Vertex::LABEL_PACKAGE_INFORMATION);
     }
 
-    /** @return array<string, int|string> */
+    /** @return array<string, mixed> */
     public function jsonSerialize(): array
     {
         return parent::jsonSerialize() + [

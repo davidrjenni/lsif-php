@@ -34,7 +34,7 @@ final class Item extends Edge
         parent::__construct($id, Edge::LABEL_ITEM);
     }
 
-    /** @return array<string, int|string|int[]> */
+    /** @return array<string, mixed> */
     public function jsonSerialize(): array
     {
         $data = parent::jsonSerialize() + [

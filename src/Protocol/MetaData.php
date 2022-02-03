@@ -21,7 +21,7 @@ final class MetaData extends Vertex
         $this->positionEncoding = self::POSITION_ENCODING;
     }
 
-    /** @return array<string, int|string|ToolInfo> */
+    /** @return array<string, mixed> */
     public function jsonSerialize(): array
     {
         return parent::jsonSerialize() + [

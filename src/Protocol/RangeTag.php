@@ -17,7 +17,7 @@ final class RangeTag implements JsonSerializable
     ) {
     }
 
-    /** @return array<string, int|string|RangeData> */
+    /** @return array<string, mixed> */
     public function jsonSerialize(): array
     {
         $data = [

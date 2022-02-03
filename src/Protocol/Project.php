@@ -11,7 +11,7 @@ final class Project extends Vertex
         parent::__construct($id, Vertex::LABEL_PROJECT);
     }
 
-    /** @return array<string, int|string> */
+    /** @return array<string, mixed> */
     public function jsonSerialize(): array
     {
         return parent::jsonSerialize() + [

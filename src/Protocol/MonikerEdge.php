@@ -11,7 +11,7 @@ final class MonikerEdge extends Edge
         parent::__construct($id, Edge::LABEL_MONIKER_EDGE);
     }
 
-    /** @return array<string, int|string> */
+    /** @return array<string, mixed> */
     public function jsonSerialize(): array
     {
         return parent::jsonSerialize() + [

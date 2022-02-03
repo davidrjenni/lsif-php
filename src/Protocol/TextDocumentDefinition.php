@@ -11,7 +11,7 @@ final class TextDocumentDefinition extends Edge
         parent::__construct($id, Edge::LABEL_TEXT_DOCUMENT_DEFINITION);
     }
 
-    /** @return array<string, int|string> */
+    /** @return array<string, mixed> */
     public function jsonSerialize(): array
     {
         return parent::jsonSerialize() + [
