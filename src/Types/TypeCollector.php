@@ -107,10 +107,14 @@ final class TypeCollector
             return $this->lookupClassType($types, $expr->name->toString());
         }
         if ($expr instanceof Ternary) {
-            return [
-                ...$this->typeExpr($expr->if),
-                ...$this->typeExpr($expr->else),
-            ];
+            $elseTypes = $this->typeExpr($expr->else);
+            if ($expr->if !== null) {
+                return [
+                    ...$this->typeExpr($expr->if),
+                    ...$elseTypes,
+                ];
+            }
+            return $elseTypes;
         }
         if ($expr instanceof Variable) {
             return $this->lookupVariableType($expr);
