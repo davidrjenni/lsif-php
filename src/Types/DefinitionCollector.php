@@ -9,6 +9,7 @@ use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Const_;
 use PhpParser\Node\Expr\Assign;
+use PhpParser\Node\Expr\Error;
 use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Param;
@@ -136,6 +137,10 @@ final class DefinitionCollector
 
     private function collectParam(int $docId, Param $param): void
     {
+        if ($param->var instanceof Error) {
+            return;
+        }
+
         $name = new Identifier($param->var->name, $param->getAttributes());
 
         // Handle constructor property promotion.
