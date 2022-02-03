@@ -36,6 +36,7 @@ use SplFileInfo;
 use function array_merge;
 use function array_unique;
 use function count;
+use function is_string;
 
 use const DIRECTORY_SEPARATOR;
 
@@ -112,7 +113,10 @@ final class Indexer
             /** @var SplFileInfo $f */
             foreach ($fileIterator as $f) {
                 if ($f->getExtension() === 'php') {
-                    $this->files[] = $f->getRealPath();
+                    $path = $f->getRealPath();
+                    if (is_string($path)) {
+                        $this->files[] = $path;
+                    }
                 }
             }
         }
