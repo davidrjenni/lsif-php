@@ -35,6 +35,7 @@ use PhpParser\Node\UnionType;
 use function array_map;
 use function array_merge;
 use function count;
+use function is_string;
 
 /** TypeCollector collects types of expressions which evaluate to named types. */
 final class TypeCollector
@@ -169,6 +170,9 @@ final class TypeCollector
         if ($var->name === 'this') {
             $class = ClassLikeUtil::nearestClassLike($var);
             return $class !== null ? [IdentifierBuilder::fqClassName($class)] : [];
+        }
+        if (!is_string($var->name)) {
+            return [];
         }
         $fqName = IdentifierBuilder::fqName($var, $var->name);
         return $this->types[$fqName] ?? [];
