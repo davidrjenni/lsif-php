@@ -31,5 +31,11 @@ class Class2
         for ($i = 0; $i < count($c2m3p1); $i++) {
             echo ($c2m3p1[$i] . "\n");
         }
+
+        [$r, $g, $b] = [138, 146, 204];
+        echo($r + $g + $b);
+
+        [[$x, $y, $z]] = [['a', 'b', 'c']];
+        echo("$x, $y, $z");
     }
 }

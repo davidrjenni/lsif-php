@@ -8,6 +8,7 @@ use LsifPhp\Parser\NodeTraverserFactory;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Const_;
+use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Expr\Error;
 use PhpParser\Node\Expr\Variable;
@@ -169,6 +170,19 @@ final class DefinitionCollector
     {
         if ($assign->var instanceof Variable) {
             $this->collectVar($docId, $assign->var, $assign->getDocComment());
+        } elseif ($assign->var instanceof Array_) {
+            $this->collectList($docId, $assign->var, $assign->getDocComment());
+        }
+    }
+
+    private function collectList(int $docId, Array_ $a, ?Doc $doc): void
+    {
+        foreach ($a->items as $item) {
+            if ($item->value instanceof Variable) {
+                $this->collectVar($docId, $item->value, $doc);
+            } elseif ($item->value instanceof Array_) {
+                $this->collectList($docId, $item->value, $doc);
+            }
         }
     }
 
