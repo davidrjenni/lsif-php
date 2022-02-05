@@ -175,7 +175,7 @@ final class DefinitionCollector
         }
     }
 
-    private function collectList(int $docId, Array_ $a, ?Doc $doc): void
+    private function collectList(int $docId, Array_ $a, ?Doc $doc = null): void
     {
         foreach ($a->items as $item) {
             if ($item->value instanceof Variable) {
@@ -193,6 +193,8 @@ final class DefinitionCollector
         }
         if ($f->valueVar instanceof Variable) {
             $this->collectVar($docId, $f->valueVar);
+        } elseif ($f->valueVar instanceof Array_) {
+            $this->collectList($docId, $f->valueVar);
         }
     }
 
