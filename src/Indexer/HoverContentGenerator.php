@@ -187,7 +187,10 @@ final class HoverContentGenerator
         if ($type instanceof IntersectionType) {
             return implode('&', array_map(fn($t): string => $this->typeInfo($t), $type->types));
         }
-        return $type->toString();
+        if ($type instanceof Identifier || $type instanceof Name) {
+            return $type->toString();
+        }
+        throw new LogicException('Unexpected node type: ' . $type::class);
     }
 
     private function visibility(ClassConst|Property|ClassMethod $node): string
