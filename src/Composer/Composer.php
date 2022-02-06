@@ -52,7 +52,9 @@ final class Composer
             }
             $pkg = new PkgInfo($pkg['name'], $pkg['version']);
             foreach ($namespaces as $namespace) {
-                $this->deps[$namespace] = $pkg;
+                if (is_string($namespace)) {
+                    $this->deps[$namespace] = $pkg;
+                }
             }
         }
     }
