@@ -135,6 +135,10 @@ final class TypeCollectorTest extends TestCase
         $type = $this->typeCollector->typeExpr($expr);
         $this->assertEquals(['Tests\Types\TestData\Class5'], $type);
 
+        $expr = $this->findMethodCall('Class8.php', 'ac1m1');
+        $type = $this->typeCollector->typeExpr($expr);
+        $this->assertEquals(['Tests\Types\TestData\Class3'], $type);
+
         $expr = $this->findMethodCall('Class7.php', 'i1m1');
         $type = $this->typeCollector->typeExpr($expr);
         $this->assertEquals(['Tests\Types\TestData\Class1'], $type);
