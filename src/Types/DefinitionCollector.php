@@ -180,6 +180,9 @@ final class DefinitionCollector
     private function collectList(int $docId, Array_ $a, ?Doc $doc = null): void
     {
         foreach ($a->items as $item) {
+            if ($item === null) {
+                continue;
+            }
             if ($item->value instanceof Variable) {
                 $this->collectVar($docId, $item->value, $doc);
             } elseif ($item->value instanceof Array_) {
