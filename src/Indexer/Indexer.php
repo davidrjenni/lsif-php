@@ -248,7 +248,11 @@ final class Indexer
                     return;
                 }
 
-                if ($node instanceof Variable && !($node->getAttribute('parent') instanceof Param)) {
+                if (
+                    $node instanceof Variable
+                    && !($node->getAttribute('parent') instanceof Param)
+                    && is_string($node->name)
+                ) {
                     $fqName = IdentifierBuilder::fqName($node, $node->name);
                     $this->emitReference($fqName, $doc, $node);
                     return;
