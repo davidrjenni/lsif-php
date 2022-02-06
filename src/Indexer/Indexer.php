@@ -18,6 +18,7 @@ use LsifPhp\Types\IdentifierBuilder;
 use LsifPhp\Types\TypeCollector;
 use PhpParser\Node;
 use PhpParser\Node\Expr\ClassConstFetch;
+use PhpParser\Node\Expr\Error;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\NullsafeMethodCall;
 use PhpParser\Node\Expr\NullsafePropertyFetch;
@@ -192,7 +193,11 @@ final class Indexer
     {
         $this->traverseDocumentNodes(
             function (Node $node, Document $doc): void {
-                if ($node instanceof ClassConstFetch && $node->class instanceof Name) {
+                if (
+                    $node instanceof ClassConstFetch
+                    && $node->class instanceof Name
+                    && !$node->name instanceof Error
+                ) {
                     $fqClassName = IdentifierBuilder::fqClassName($node->class);
                     $fqName = "{$fqClassName}::{$node->name}";
                     $this->emitReference($fqName, $doc, $node->name);
