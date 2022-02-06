@@ -54,10 +54,7 @@ final class DefinitionCollectorTest extends TestCase
             }
         }
 
-        $this->definitions = [];
-        foreach ($definitionCollector->definitions() as $def) {
-            $this->definitions[$def->identifier()] = $def;
-        }
+        $this->definitions = $definitionCollector->definitions();
     }
 
     public function testCollectDefinitions(): void
@@ -108,7 +105,8 @@ final class DefinitionCollectorTest extends TestCase
 
         $this->assertDefinition('Class8::c8m2()::anon-func-152()::anon-class-198::c8v4v2p1', 37, false);
         $this->assertDefinition('Class8::c8m2()::anon-func-152()::anon-class-198::__construct()', 39, true);
-        $this->assertDefinition('Class8::c8m2()::anon-func-152()::anon-class-198::c8v4v2m1()', 44, true);
+        $this->assertDefinition('Class8::c8m2()::anon-func-152()::anon-class-198::__construct()::c8v4v2p1', 39, false);
+        $this->assertDefinition('Class8::c8m2()::anon-func-152()::anon-class-198::c8v4v2m1()', 45, true);
 
         $this->assertDefinition('Interface1::i1m1()', 9, true);
 

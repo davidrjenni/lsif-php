@@ -30,7 +30,7 @@ final class DefinitionCollector
 {
     private NodeTraverserFactory $nodeTraverserFactory;
 
-    /** @var Definition[] */
+    /** @var array<string, Definition> */
     private array $definitions;
 
     public function __construct()
@@ -43,7 +43,7 @@ final class DefinitionCollector
      * Returns all collected definitions.
      * NOTE: Call `collect` first, otherwise the result is empty.
      *
-     * @return Definition[]
+     * @return array<string, Definition>
      */
     public function definitions(): array
     {
@@ -92,7 +92,7 @@ final class DefinitionCollector
 
     private function collectClassLikeDefinition(int $docId, ClassLike $classLike): void
     {
-        $this->definitions[] = new Definition(
+        $this->addDef(
             $docId,
             $classLike->name,
             IdentifierBuilder::fqClassName($classLike),
@@ -104,7 +104,7 @@ final class DefinitionCollector
 
     private function collectClassConst(int $docId, ClassConst $classConst, Const_ $const): void
     {
-        $this->definitions[] = new Definition(
+        $this->addDef(
             $docId,
             $const->name,
             IdentifierBuilder::fqName($classConst, $const->name->toString()),
@@ -116,7 +116,7 @@ final class DefinitionCollector
 
     private function collectProperty(int $docId, Property $property, PropertyProperty $prop): void
     {
-        $this->definitions[] = new Definition(
+        $this->addDef(
             $docId,
             $prop->name,
             IdentifierBuilder::fqName($property, $prop->name->toString()),
@@ -128,7 +128,7 @@ final class DefinitionCollector
 
     private function collectMethod(int $docId, ClassMethod $method): void
     {
-        $this->definitions[] = new Definition(
+        $this->addDef(
             $docId,
             $method->name,
             IdentifierBuilder::fqName($method, "{$method->name}()"),
@@ -148,7 +148,7 @@ final class DefinitionCollector
 
         // Handle constructor property promotion.
         if ($param->flags !== 0) {
-            $this->definitions[] = new Definition(
+            $this->addDef(
                 $docId,
                 $name,
                 IdentifierBuilder::fqName($param->getAttribute('parent'), $name->toString()),
@@ -158,7 +158,7 @@ final class DefinitionCollector
             );
         }
 
-        $this->definitions[] = new Definition(
+        $this->addDef(
             $docId,
             $name,
             IdentifierBuilder::fqName($param, $name->toString()),
@@ -209,6 +209,13 @@ final class DefinitionCollector
             return;
         }
         $fqName = IdentifierBuilder::fqName($var, $var->name);
-        $this->definitions[] = new Definition($docId, $var, $fqName, $var, false, $doc);
+        $this->addDef($docId, $var, $fqName, $var, false, $doc);
+    }
+
+    private function addDef(int $docId, Node $name, string $ident, Node $def, bool $exported, ?Doc $doc): void
+    {
+        if (!isset($this->definitions[$ident])) {
+            $this->definitions[$ident] = new Definition($docId, $name, $ident, $def, $exported, $doc);
+        }
     }
 }

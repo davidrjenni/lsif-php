@@ -38,6 +38,7 @@ class Class8
 
                 public function __construct(string $c8v4v2p1)
                 {
+                    $c8v4v2p1 = "v{$c8v4v2p1}";
                     $this->c8v4v2p1 = $c8v4v2p1;
                 }
 

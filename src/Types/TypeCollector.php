@@ -185,7 +185,7 @@ final class TypeCollector
     /**
      * Collects the property types and return types of methods from the given definitions.
      *
-     * @param  Definition[]  $definitions
+     * @param  array<string, Definition>  $definitions
      */
     public function collect(array $definitions): void
     {
