@@ -26,6 +26,7 @@ use PhpParser\Node\Stmt\Property;
 use PhpParser\Node\Stmt\PropertyProperty;
 use PhpParser\Node\Stmt\Trait_;
 use PhpParser\Node\UnionType;
+use PhpParser\PrettyPrinter\Standard as PrettyPrinter;
 
 use function array_map;
 use function count;
@@ -33,57 +34,64 @@ use function implode;
 use function preg_replace;
 use function str_replace;
 
-/** HoverContent provides methods to create hover content for definitions. */
-final class HoverContent
+/** HoverContentGenerator provides methods to create hover content for definitions. */
+final class HoverContentGenerator
 {
-    /** @return HoverResultContent[] */
-    public static function create(Definition $def, string $languageId): array
+    private PrettyPrinter $printer;
+
+    public function __construct()
     {
-        $info = self::createInfo($def->def());
+        $this->printer = new PrettyPrinter();
+    }
+
+    /** @return HoverResultContent[] */
+    public function create(Definition $def, string $languageId): array
+    {
+        $info = $this->createInfo($def->def());
         $hoverContent = [new MarkedString($languageId, $info)];
 
         $comment = $def->doc();
         if ($comment !== null) {
             $hoverContent[] = new MarkupContent(
                 MarkupContent::KIND_MARKDOWN,
-                self::cleanup($comment->getText()),
+                $this->cleanup($comment->getText()),
             );
         }
 
         return $hoverContent;
     }
 
-    private static function createInfo(Node $node): string
+    private function createInfo(Node $node): string
     {
         if ($node instanceof Class_) {
-            return self::classInfo($node);
+            return $this->classInfo($node);
         }
         if ($node instanceof Interface_) {
-            return self::interfaceInfo($node);
+            return $this->interfaceInfo($node);
         }
         if ($node instanceof Trait_) {
             return "trait {$node->name}";
         }
         if ($node instanceof Const_) {
-            return self::constInfo($node);
+            return $this->constInfo($node);
         }
         if ($node instanceof PropertyProperty) {
-            return self::propertyInfo($node);
+            return $this->propertyInfo($node);
         }
         if ($node instanceof ClassMethod) {
-            return self::methodInfo($node);
+            return $this->methodInfo($node);
         }
         if ($node instanceof Param) {
-            return self::paramInfo($node);
+            return $this->printer->prettyPrint([$node]);
         }
         if ($node instanceof Variable) {
-            return self::varInfo($node);
+            return $this->printer->prettyPrint([$node]);
         }
 
         throw new LogicException('Unexpected node type: ' . $node::class);
     }
 
-    private static function classInfo(Class_ $class): string
+    private function classInfo(Class_ $class): string
     {
         $info = "class {$class->name}";
 
@@ -97,55 +105,59 @@ final class HoverContent
         }
 
         return count($class->implements) > 0
-            ? "{$info} implements " . self::joinNames($class->implements)
+            ? "{$info} implements " . $this->joinNames($class->implements)
             : $info;
     }
 
-    private static function interfaceInfo(Interface_ $interface): string
+    private function interfaceInfo(Interface_ $interface): string
     {
         $info = "interface {$interface->name}";
         return count($interface->extends) > 0
-            ? "{$info} implements " . self::joinNames($interface->extends)
+            ? "{$info} implements " . $this->joinNames($interface->extends)
             : $info;
     }
 
-    private static function constInfo(Const_ $const): string
+    private function constInfo(Const_ $const): string
     {
-        $info = "const {$const->name}";
+        $info = "const {$const->name} = " . $this->printer->prettyPrint([$const->value]);
         $classConst = $const->getAttribute('parent');
         if (!$classConst instanceof ClassConst) {
             return $info;
         }
         if ($classConst->isFinal()) {
-            $info = "final $info";
+            $info = "final {$info}";
         }
-        return self::visibility($classConst) . " $info";
+        return $this->visibility($classConst) . " $info";
     }
 
-    private static function propertyInfo(PropertyProperty $property): string
+    private function propertyInfo(PropertyProperty $property): string
     {
         /** @var Property $classProperty */
         $classProperty = $property->getAttribute('parent');
-        $modifiers = self::visibility($classProperty);
+        $modifiers = $this->visibility($classProperty);
         if ($classProperty->isStatic()) {
             $modifiers = "{$modifiers} static";
         }
 
-        return $classProperty->type !== null
-            ? "{$modifiers} " . self::typeInfo($classProperty->type) . " \${$property->name}"
-            : "$modifiers \${$property->name}";
+        $info = $classProperty->type !== null
+            ? "{$modifiers} " . $this->typeInfo($classProperty->type) . " \${$property->name}"
+            : "{$modifiers} \${$property->name}";
+
+        return $property->default !== null
+            ? "{$info} = " . $this->printer->prettyPrint([$property->default])
+            : $info;
     }
 
-    private static function methodInfo(ClassMethod $method): string
+    private function methodInfo(ClassMethod $method): string
     {
-        $modifiers = self::visibility($method);
+        $modifiers = $this->visibility($method);
         if ($method->isStatic()) {
-            $modifiers = "$modifiers static";
+            $modifiers = "{$modifiers} static";
         }
         if ($method->isFinal()) {
-            $modifiers = "$modifiers final";
+            $modifiers = "{$modifiers} final";
         } elseif ($method->isAbstract()) {
-            $modifiers = "$modifiers abstract";
+            $modifiers = "{$modifiers} abstract";
         }
 
         $info = "{$modifiers} function {$method->name}(";
@@ -153,50 +165,15 @@ final class HoverContent
             if ($i > 0) {
                 $info .= ', ';
             }
-            $info .= self::paramInfo($param);
+            $info .= $this->printer->prettyPrint([$param]);
         }
 
         return $method->returnType !== null
-            ? "{$info}): " . self::typeInfo($method->returnType)
+            ? "{$info}): " . $this->typeInfo($method->returnType)
             : "{$info})";
     }
 
-    private static function paramInfo(Param $param): string
-    {
-        $info = '';
-        if ($param->flags !== 0) {
-            if (($param->flags & Class_::MODIFIER_PUBLIC) !== 0) {
-                $info = 'public ';
-            } elseif (($param->flags & Class_::MODIFIER_PROTECTED) !== 0) {
-                $info = 'protected ';
-            } elseif (($param->flags & Class_::MODIFIER_PRIVATE) !== 0) {
-                $info = 'private ';
-            }
-            if (($param->flags & Class_::MODIFIER_READONLY) !== 0) {
-                $info .= ' readonly ';
-            }
-        }
-        if ($param->type !== null) {
-            $info .= self::typeInfo($param->type) . ' ';
-        }
-
-        $paramName = "\${$param->var->name}";
-        if ($param->byRef) {
-            $paramName = "&{$paramName}";
-        }
-        if ($param->variadic) {
-            $paramName = "...{$paramName}";
-        }
-
-        return "{$info}{$paramName}";
-    }
-
-    private static function varInfo(Variable $var): string
-    {
-        return "\${$var->name}";
-    }
-
-    private static function typeInfo(Identifier|Name|ComplexType|null $type): string
+    private function typeInfo(Identifier|Name|ComplexType|null $type): string
     {
         if ($type === null) {
             return '';
@@ -205,15 +182,15 @@ final class HoverContent
             return "?{$type->type}";
         }
         if ($type instanceof UnionType) {
-            return implode('|', array_map(fn($t): string => self::typeInfo($t), $type->types));
+            return implode('|', array_map(fn($t): string => $this->typeInfo($t), $type->types));
         }
         if ($type instanceof IntersectionType) {
-            return implode('&', array_map(fn($t): string => self::typeInfo($t), $type->types));
+            return implode('&', array_map(fn($t): string => $this->typeInfo($t), $type->types));
         }
         return $type->toString();
     }
 
-    private static function visibility(ClassConst|Property|ClassMethod $node): string
+    private function visibility(ClassConst|Property|ClassMethod $node): string
     {
         if ($node->isPrivate()) {
             return 'private';
@@ -228,7 +205,7 @@ final class HoverContent
     }
 
     /** @param  Name[]  $names */
-    private static function joinNames(array $names): string
+    private function joinNames(array $names): string
     {
         return implode(
             ', ',
@@ -236,12 +213,17 @@ final class HoverContent
         );
     }
 
-    private static function cleanup(string $comment): string
+    private function cleanup(string $comment): string
     {
-        $comment = preg_replace('(^(\s+)?/\*\*\s)m', '', $comment, 1);
-        $comment = preg_replace('(^(\s+)?\*\s)m', '', $comment, -1);
-        $comment = preg_replace('(^(\s+)?\*/)m', '', $comment, 1);
-        $comment = preg_replace('((\s+)?\*/$)m', '', $comment, 1);
+        $comment = $this->remove('(^(\s+)?/\*\*\s)m', $comment);
+        $comment = $this->remove('(^(\s+)?\*\s)m', $comment, -1);
+        $comment = $this->remove('(^(\s+)?\*/)m', $comment);
+        $comment = $this->remove('((\s+)?\*/$)m', $comment);
         return str_replace("\n", '<br>', $comment);
+    }
+
+    private function remove(string $pattern, string $subject, int $limit = 1): string
+    {
+        return preg_replace($pattern, '', $subject, $limit) ?? $subject;
     }
 }

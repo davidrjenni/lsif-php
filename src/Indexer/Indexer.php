@@ -50,6 +50,8 @@ final class Indexer
 
     private NodeTraverserFactory $nodeTraverserFactory;
 
+    private HoverContentGenerator $hoverContentGenerator;
+
     private DefinitionCollector $definitionCollector;
 
     private TypeCollector $typeCollector;
@@ -80,6 +82,7 @@ final class Indexer
     ) {
         $this->parser = ParserFactory::create();
         $this->nodeTraverserFactory = new NodeTraverserFactory();
+        $this->hoverContentGenerator = new HoverContentGenerator();
         $this->definitionCollector = new DefinitionCollector();
         $this->typeCollector = new TypeCollector();
         $this->projectId = -1;
@@ -149,7 +152,7 @@ final class Indexer
             $d = $this->emitDefinition(
                 $def->name(),
                 $this->documents[$def->docId()],
-                HoverContent::create($def, Indexer::LANGUAGE_PHP),
+                $this->hoverContentGenerator->create($def, Indexer::LANGUAGE_PHP),
             );
             if ($def->exported()) {
                 $this->emitExportMoniker($d->resultSetId(), $def->identifier());
