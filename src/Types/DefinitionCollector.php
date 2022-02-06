@@ -23,6 +23,8 @@ use PhpParser\Node\Stmt\Foreach_;
 use PhpParser\Node\Stmt\Property;
 use PhpParser\Node\Stmt\PropertyProperty;
 
+use function is_string;
+
 /** DefinitionCollector collects identifier definition information from AST nodes. */
 final class DefinitionCollector
 {
@@ -138,7 +140,7 @@ final class DefinitionCollector
 
     private function collectParam(int $docId, Param $param): void
     {
-        if ($param->var instanceof Error) {
+        if ($param->var instanceof Error || !is_string($param->var->name)) {
             return;
         }
 
