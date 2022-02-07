@@ -40,7 +40,7 @@ abstract class Edge extends Element
     public function __construct(int $id, private string $label)
     {
         if (!in_array($label, self::LABELS, true)) {
-            throw new InvalidArgumentException("$label is not a valid edge label.");
+            throw new InvalidArgumentException("{$label} is not a valid edge label.");
         }
 
         parent::__construct($id, Element::TYPE_EDGE);

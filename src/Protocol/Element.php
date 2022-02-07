@@ -23,7 +23,7 @@ abstract class Element implements JsonSerializable
     public function __construct(private int $id, private string $type)
     {
         if (!in_array($type, self::TYPES, true)) {
-            throw new InvalidArgumentException("$type is not a valid element type.");
+            throw new InvalidArgumentException("{$type} is not a valid element type.");
         }
     }
 

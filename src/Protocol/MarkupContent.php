@@ -22,7 +22,7 @@ final class MarkupContent implements HoverResultContent
     public function __construct(private string $kind, private string $value)
     {
         if (!in_array($kind, self::KINDS, true)) {
-            throw new InvalidArgumentException("$kind is not a valid markup content kind.");
+            throw new InvalidArgumentException("{$kind} is not a valid markup content kind.");
         }
     }
 

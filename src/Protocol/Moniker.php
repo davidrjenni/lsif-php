@@ -26,7 +26,7 @@ final class Moniker extends Vertex
         private string $identifier,
     ) {
         if (!in_array($kind, self::KINDS, true)) {
-            throw new InvalidArgumentException("$kind is not a valid moniker kind.");
+            throw new InvalidArgumentException("{$kind} is not a valid moniker kind.");
         }
 
         parent::__construct($id, Vertex::LABEL_MONIKER);

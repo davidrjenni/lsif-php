@@ -28,7 +28,7 @@ final class Item extends Edge
         private string $property = '',
     ) {
         if ($property !== '' && !in_array($property, self::PROPERTIES, true)) {
-            throw new InvalidArgumentException("$property is not a valid item property.");
+            throw new InvalidArgumentException("{$property} is not a valid item property.");
         }
 
         parent::__construct($id, Edge::LABEL_ITEM);
