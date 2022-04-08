@@ -80,6 +80,7 @@ final class Indexer
         private string $projectRoot,
         private Emitter $emitter,
         private ToolInfo $toolInfo,
+        private string $version,
     ) {
         $this->parser = ParserFactory::create();
         $this->nodeTraverserFactory = new NodeTraverserFactory();
@@ -184,7 +185,7 @@ final class Indexer
     private function emitExportMoniker(int $resultSetId, string $fqName): void
     {
         $monikerId = $this->emitter->emitExportMoniker(self::COMPOSER_SCHEME, $fqName);
-        $packageId = $this->ensurePackageInformation($this->composer->pkgName(), '');
+        $packageId = $this->ensurePackageInformation($this->composer->pkgName(), $this->version);
         $this->emitter->emitPackageInformationEdge($monikerId, $packageId);
         $this->emitter->emitMonikerEdge($resultSetId, $monikerId);
     }

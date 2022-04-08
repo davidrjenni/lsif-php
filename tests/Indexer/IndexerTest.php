@@ -36,7 +36,7 @@ final class IndexerTest extends TestCase
 
         $toolInfo = new ToolInfo('lsif-php', 'dev', []);
         $this->emitter = new Emitter($this->tmpfile);
-        $this->indexer = new Indexer(self::PROJECT_ROOT, $this->emitter, $toolInfo);
+        $this->indexer = new Indexer(self::PROJECT_ROOT, $this->emitter, $toolInfo, 'v0.1.1');
     }
 
     public function testIndex(): void

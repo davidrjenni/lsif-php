@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 include $_composer_autoload_path ?? __DIR__ . '/../vendor/autoload.php';
 
+use LsifPhp\Git\Git;
 use LsifPhp\Indexer\Indexer;
 use LsifPhp\Protocol\Emitter;
 use LsifPhp\Protocol\ToolInfo;
@@ -12,7 +13,8 @@ use LsifPhp\Protocol\ToolInfo;
 $projectRoot = \getcwd();
 $toolInfo = new ToolInfo('lsif-php', '0.0.1', \array_splice($argv, 1));
 
+$git = new Git();
 $emitter = new Emitter();
-$indexer = new Indexer($projectRoot, $emitter, $toolInfo);
+$indexer = new Indexer($projectRoot, $emitter, $toolInfo, $git->version());
 $indexer->index();
 $emitter->write();
