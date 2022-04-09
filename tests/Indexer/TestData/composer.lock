@@ -3,6 +3,9 @@
         {
             "name": "davidrjenni/testdep",
             "version": "v4.13.2",
+            "source": {
+                "reference": "e6d6a033761e3625f6ec0c1cceefbcff"
+            },
             "autoload": {
                 "psr-4": {
                     "TestProjectDep\\": "src"

@@ -9,6 +9,7 @@ use LsifPhp\File\FileReader;
 use function array_values;
 use function is_string;
 use function json_decode;
+use function substr;
 
 use const DIRECTORY_SEPARATOR;
 use const JSON_THROW_ON_ERROR;
@@ -47,10 +48,10 @@ final class Composer
             if (!isset($pkg['name']) || !is_string($pkg['name'])) {
                 continue;
             }
-            if (!isset($pkg['version']) || !is_string($pkg['version'])) {
+            if (!isset($pkg['source']['reference']) || !is_string($pkg['source']['reference'])) {
                 continue;
             }
-            $pkg = new PkgInfo($pkg['name'], $pkg['version']);
+            $pkg = new PkgInfo($pkg['name'], substr($pkg['source']['reference'], 0, 12));
             foreach ($namespaces as $namespace) {
                 if (is_string($namespace)) {
                     $this->deps[$namespace] = $pkg;

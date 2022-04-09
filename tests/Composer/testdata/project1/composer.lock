@@ -3,6 +3,9 @@
         {
             "name": "dependency/dep1",
             "version": "v4.13.2",
+            "source": {
+                "reference": "097fa9c10d3e06ba3354a86c8b647d71"
+            },
             "autoload": {
                 "psr-4": {
                     "Dep\\Dep1\\Foo": "src/",
@@ -13,6 +16,9 @@
         {
             "name": "dependency/dep2",
             "version": "2.0.1",
+            "source": {
+                "reference": "16a89a21de8372c15ef018ae09801384"
+            },
             "autoload": {
                 "psr-4": {
                     "Dep\\Dep2\\Baz": "src/"
@@ -24,6 +30,9 @@
         {
             "name": "dependency/devdep1",
             "version": "1.0.1",
+            "source": {
+                "reference": "95540607d189886c17ac3bcc1688845d"
+            },
             "autoload": {
                 "psr-4": {
                     "Dep\\Dev\\Dep1": "src/"
@@ -33,6 +42,9 @@
         {
             "name": "dependency/devdep2",
             "version": "v0.7.1",
+            "source": {
+                "reference": "c263ec04b268f53d0ac4cb4509740237"
+            },
             "autoload": {
                 "classmap": [
                     "src/"

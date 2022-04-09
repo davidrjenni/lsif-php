@@ -42,12 +42,12 @@ final class ComposerTest extends TestCase
         $pkg = $composer->dependency("Dep\\Dep1\\Foo\\C1::c1p1");
         $this->assertNotNull($pkg);
         $this->assertEquals('dependency/dep1', $pkg->name());
-        $this->assertEquals('v4.13.2', $pkg->version());
+        $this->assertEquals('097fa9c10d3e', $pkg->version());
 
         $pkg = $composer->dependency("Dep\\Dep1\\Bar\\Baz\\C2::c2m1()");
         $this->assertNotNull($pkg);
         $this->assertEquals('dependency/dep1', $pkg->name());
-        $this->assertEquals('v4.13.2', $pkg->version());
+        $this->assertEquals('097fa9c10d3e', $pkg->version());
 
         $pkg = $composer->dependency("Dep\\Dep2\\Bar\\C1::c1m1()");
         $this->assertNull($pkg);
@@ -55,7 +55,7 @@ final class ComposerTest extends TestCase
         $pkg = $composer->dependency("Dep\\Dev\\Dep1\\Bar\\Baz\\C2::c2m1()");
         $this->assertNotNull($pkg);
         $this->assertEquals('dependency/devdep1', $pkg->name());
-        $this->assertEquals('1.0.1', $pkg->version());
+        $this->assertEquals('95540607d189', $pkg->version());
     }
 
     public function testSourceDirs(): void
