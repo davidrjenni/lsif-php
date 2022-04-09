@@ -8,6 +8,8 @@ FROM sourcegraph/src-cli:3 AS src-cli
 
 FROM php:8.1-cli-alpine3.15
 
+RUN echo 'memory_limit=1G' >> /usr/local/etc/php/conf.d/docker-php-memory-limit.ini;
+
 COPY --from=builder /app/vendor /app/vendor
 COPY bin /app/bin
 COPY src /app/src
