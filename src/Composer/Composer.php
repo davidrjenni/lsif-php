@@ -7,8 +7,10 @@ namespace LsifPhp\Composer;
 use LsifPhp\File\FileReader;
 
 use function array_values;
+use function is_array;
 use function is_string;
 use function json_decode;
+use function str_starts_with;
 use function substr;
 
 use const DIRECTORY_SEPARATOR;
@@ -65,7 +67,29 @@ final class Composer
     {
         $autoloadDirs = array_values($this->composer['autoload']['psr-4'] ?? []);
         $autoloadDevDirs = array_values($this->composer['autoload-dev']['psr-4'] ?? []);
-        return array_merge($autoloadDirs, $autoloadDevDirs);
+        $dirs = array_merge($autoloadDirs, $autoloadDevDirs);
+        foreach ($dirs as $i => $dir) {
+            if (is_array($dir)) {
+                unset($dirs[$i]);
+                foreach ($dir as $d) {
+                    if (!$this->prefixExists($dirs, $d)) {
+                        $dirs[] = $d;
+                    }
+                }
+            }
+        }
+        return array_values($dirs);
+    }
+
+    /** @param  string[]  $dirs */
+    private function prefixExists(array $dirs, string $dir): bool
+    {
+        foreach ($dirs as $d) {
+            if (str_starts_with($dir, $d)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function pkgName(): string

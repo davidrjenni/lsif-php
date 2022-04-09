@@ -3,7 +3,12 @@
     "autoload": {
         "psr-4": {
             "TestProject1\\": "src/",
-            "Database\\": "database/"
+            "Database\\": "database/",
+            "TestProject2\\Nested\\": [
+                "src/Foo",
+                "src/Bar",
+                "lib/Baz"
+            ]
         }
     },
     "autoload-dev": {
