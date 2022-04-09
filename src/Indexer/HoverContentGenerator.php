@@ -21,6 +21,7 @@ use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassConst;
 use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\Stmt\Enum_;
 use PhpParser\Node\Stmt\Interface_;
 use PhpParser\Node\Stmt\Property;
 use PhpParser\Node\Stmt\PropertyProperty;
@@ -71,6 +72,9 @@ final class HoverContentGenerator
         }
         if ($node instanceof Trait_) {
             return "trait {$node->name}";
+        }
+        if ($node instanceof Enum_) {
+            return "enum {$node->name}";
         }
         if ($node instanceof Const_) {
             return $this->constInfo($node);
