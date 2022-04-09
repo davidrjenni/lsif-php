@@ -61,9 +61,9 @@ final class ComposerTest extends TestCase
     public function testSourceDirs(): void
     {
         $tests = [
-            'project1' => ['src/', 'database/', 'tests/', 'lib/Baz'],
+            'project1' => ['database/', 'lib/Baz', 'src/', 'tests/'],
             'project2' => ['src/'],
-            'project3' => ['src/', 'database/'],
+            'project3' => ['database/', 'src/'],
         ];
 
         foreach ($tests as $project => $expectedDirs) {

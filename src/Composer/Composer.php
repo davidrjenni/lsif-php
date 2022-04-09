@@ -6,6 +6,7 @@ namespace LsifPhp\Composer;
 
 use LsifPhp\File\FileReader;
 
+use function array_merge;
 use function array_values;
 use function is_array;
 use function is_string;
@@ -72,10 +73,14 @@ final class Composer
             if (is_array($dir)) {
                 unset($dirs[$i]);
                 foreach ($dir as $d) {
-                    if (!$this->prefixExists($dirs, $d)) {
-                        $dirs[] = $d;
-                    }
+                    $dirs[] = $d;
                 }
+            }
+        }
+        sort($dirs);
+        foreach ($dirs as $i => $dir) {
+            if ($this->prefixExists($dirs, $dir)) {
+                unset($dirs[$i]);
             }
         }
         return array_values($dirs);
@@ -85,7 +90,7 @@ final class Composer
     private function prefixExists(array $dirs, string $dir): bool
     {
         foreach ($dirs as $d) {
-            if (str_starts_with($dir, $d)) {
+            if ($dir !== $d && str_starts_with($dir, $d)) {
                 return true;
             }
         }

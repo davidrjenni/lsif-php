@@ -1,8 +1,8 @@
 {
     "autoload": {
         "psr-4": {
-            "TestProject1\\": "src/",
-            "Database\\": "database/"
+            "TestProject1\\": ["src/"],
+            "Database\\": ["database/"]
         }
     },
     "autoload-dev": {}
