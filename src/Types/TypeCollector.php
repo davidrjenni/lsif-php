@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LsifPhp\Types;
 
+use LsifPhp\Types\Internal\TypeMap;
 use PhpParser\Node\ComplexType;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Assign;
@@ -27,29 +28,22 @@ use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassLike;
 use PhpParser\Node\Stmt\ClassMethod;
-use PhpParser\Node\Stmt\Interface_;
 use PhpParser\Node\Stmt\Property;
 use PhpParser\Node\Stmt\PropertyProperty;
 use PhpParser\Node\UnionType;
 
 use function array_map;
 use function array_merge;
-use function count;
-use function is_string;
 
 /** TypeCollector collects types of expressions which evaluate to named types. */
 final class TypeCollector
 {
-    /** @var array<string, string[]> */
-    private array $types;
+    private TypeMap $types;
 
-    /** @var array<string, string[]> */
-    private array $uppers;
 
     public function __construct()
     {
-        $this->types = [];
-        $this->uppers = [];
+        $this->types = new TypeMap();
     }
 
     /**
@@ -85,26 +79,26 @@ final class TypeCollector
             && $expr->name instanceof Identifier
         ) {
             $types = $this->typeExpr($expr->var);
-            return $this->lookupMethodType($types, $expr->name->toString());
+            return $this->types->methodType($types, $expr->name->toString());
         }
         if (
             ($expr instanceof PropertyFetch || $expr instanceof NullsafePropertyFetch)
             && $expr->name instanceof Identifier
         ) {
             $types = $this->typeExpr($expr->var);
-            return $this->lookupClassType($types, $expr->name->toString());
+            return $this->types->classType($types, $expr->name->toString());
         }
         if ($expr instanceof StaticCall && $expr->name instanceof Identifier) {
             $types = $expr->class instanceof Name
                 ? $this->unpackNamedType($expr->class)
                 : $this->typeExpr($expr->class);
-            return $this->lookupMethodType($types, $expr->name->toString());
+            return $this->types->methodType($types, $expr->name->toString());
         }
         if ($expr instanceof StaticPropertyFetch && $expr->name instanceof Identifier) {
             $types = $expr->class instanceof Name
                 ?  $this->unpackNamedType($expr->class)
                 : $this->typeExpr($expr->class);
-            return $this->lookupClassType($types, $expr->name->toString());
+            return $this->types->classType($types, $expr->name->toString());
         }
         if ($expr instanceof Ternary) {
             $elseTypes = $this->typeExpr($expr->else);
@@ -117,69 +111,9 @@ final class TypeCollector
             return $elseTypes;
         }
         if ($expr instanceof Variable) {
-            return $this->lookupVariableType($expr);
+            return $this->types->varType($expr);
         }
         return [];
-    }
-
-    /**
-     * @param  string[]  $classNames
-     * @return string[]
-     */
-    private function lookupMethodType(array $classNames, string $method): array
-    {
-        $types = $this->lookupClassType($classNames, "{$method}()");
-        if (count($types) > 0) {
-            return $types;
-        }
-        foreach ($classNames as $name) {
-            $uppers = $this->uppers[$name] ?? [];
-            $types = $this->lookupMethodType($uppers, $method);
-            if (count($types) > 0) {
-                return $types;
-            }
-        }
-        return [];
-    }
-
-    /**
-     * @param  string[]  $classNames
-     * @return string[]
-     */
-    private function lookupClassType(array $classNames, string $name): array
-    {
-        $types = [];
-        foreach ($classNames as $className) {
-            $fqName = "{$className}::{$name}";
-            if (isset($this->types[$fqName])) {
-                $types = array_merge($types, $this->types[$fqName]);
-            }
-        }
-        if (count($types) > 0) {
-            return $types;
-        }
-        foreach ($classNames as $class) {
-            $uppers = $this->uppers[$class] ?? [];
-            $types = $this->lookupClassType($uppers, $name);
-            if (count($types) > 0) {
-                return $types;
-            }
-        }
-        return $types;
-    }
-
-    /** @return string[] */
-    private function lookupVariableType(Variable $var): array
-    {
-        if ($var->name === 'this') {
-            $class = ClassLikeUtil::nearestClassLike($var);
-            return $class !== null ? [IdentifierBuilder::fqClassName($class)] : [];
-        }
-        if (!is_string($var->name)) {
-            return [];
-        }
-        $fqName = IdentifierBuilder::fqName($var, $var->name);
-        return $this->types[$fqName] ?? [];
     }
 
     /**
@@ -194,21 +128,21 @@ final class TypeCollector
             $node = $def->def();
             switch (true) {
                 case $node instanceof ClassLike:
-                    $this->collectUppers($node);
+                    $this->types->collectUppers($node);
                     break;
                 case $node instanceof ClassMethod:
                     $types = $this->unpackTypes($node->returnType);
-                    $this->addTypes($def, $types);
+                    $this->types->add($def, $types);
                     break;
                 case $node instanceof PropertyProperty:
                     /** @var Property $node */
                     $node = $node->getAttribute('parent');
                     $types = $this->unpackTypes($node->type);
-                    $this->addTypes($def, $types);
+                    $this->types->add($def, $types);
                     break;
                 case $node instanceof Param:
                     $types = $this->unpackTypes($node->type);
-                    $this->addTypes($def, $types);
+                    $this->types->add($def, $types);
                     break;
             }
         }
@@ -225,42 +159,8 @@ final class TypeCollector
                 continue;
             }
             $types = $this->typeExpr($parent->expr);
-            $this->addTypes($def, $types);
+            $this->types->add($def, $types);
         }
-    }
-
-    private function collectUppers(ClassLike $classLike): void
-    {
-        if ($classLike instanceof Class_) {
-            foreach ($classLike->implements as $iface) {
-                $this->addClassLikeUpper($classLike, $iface);
-            }
-            if ($classLike->extends !== null) {
-                $this->addClassLikeUpper($classLike, $classLike->extends);
-            }
-        }
-
-        if ($classLike instanceof Interface_) {
-            foreach ($classLike->extends as $iface) {
-                $this->addClassLikeUpper($classLike, $iface);
-            }
-        }
-
-        foreach ($classLike->getTraitUses() as $traitUse) {
-            foreach ($traitUse->traits as $trait) {
-                $this->addClassLikeUpper($classLike, $trait);
-            }
-        }
-    }
-
-    private function addClassLikeUpper(ClassLike $classLike, Name $upper): void
-    {
-        $fqName = IdentifierBuilder::fqClassName($classLike);
-        if (!isset($this->uppers[$fqName])) {
-            $this->uppers[$fqName] = [];
-        }
-        $name = $this->unpackNamedType($upper)[0];
-        $this->uppers[$fqName][] = $name;
     }
 
     /** @return string[] */
@@ -288,13 +188,5 @@ final class TypeCollector
     private function unpackNamedType(Name $type): array
     {
         return [IdentifierBuilder::fqClassName($type)];
-    }
-
-    /** @param  string[]  $types */
-    private function addTypes(Definition $d, array $types): void
-    {
-        if (count($types) > 0) {
-            $this->types[$d->identifier()] = $types;
-        }
     }
 }
