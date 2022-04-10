@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LsifPhp\Types;
 
+use LsifPhp\Types\Internal\NodeTypeUnpacker;
 use LsifPhp\Types\Internal\TypeMap;
-use PhpParser\Node\ComplexType;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Expr\Clone_;
@@ -20,17 +20,14 @@ use PhpParser\Node\Expr\StaticPropertyFetch;
 use PhpParser\Node\Expr\Ternary;
 use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Identifier;
-use PhpParser\Node\IntersectionType;
 use PhpParser\Node\MatchArm;
 use PhpParser\Node\Name;
-use PhpParser\Node\NullableType;
 use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassLike;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Property;
 use PhpParser\Node\Stmt\PropertyProperty;
-use PhpParser\Node\UnionType;
 
 use function array_map;
 use function array_merge;
@@ -67,10 +64,8 @@ final class TypeCollector
             );
         }
         if ($expr instanceof New_) {
-            if ($expr->class instanceof Class_) {
+            if ($expr->class instanceof Class_ || $expr->class instanceof Name) {
                 return [IdentifierBuilder::fqClassName($expr->class)];
-            } elseif ($expr->class instanceof Name) {
-                return $this->unpackNamedType($expr->class);
             }
             return $this->typeExpr($expr->class);
         }
@@ -90,13 +85,13 @@ final class TypeCollector
         }
         if ($expr instanceof StaticCall && $expr->name instanceof Identifier) {
             $types = $expr->class instanceof Name
-                ? $this->unpackNamedType($expr->class)
+                ? [IdentifierBuilder::fqClassName($expr->class)]
                 : $this->typeExpr($expr->class);
             return $this->types->methodType($types, $expr->name->toString());
         }
         if ($expr instanceof StaticPropertyFetch && $expr->name instanceof Identifier) {
             $types = $expr->class instanceof Name
-                ?  $this->unpackNamedType($expr->class)
+                ? [IdentifierBuilder::fqClassName($expr->class)]
                 : $this->typeExpr($expr->class);
             return $this->types->classType($types, $expr->name->toString());
         }
@@ -131,17 +126,17 @@ final class TypeCollector
                     $this->types->collectUppers($node);
                     break;
                 case $node instanceof ClassMethod:
-                    $types = $this->unpackTypes($node->returnType);
+                    $types = NodeTypeUnpacker::unpack($node->returnType);
                     $this->types->add($def, $types);
                     break;
                 case $node instanceof PropertyProperty:
                     /** @var Property $node */
                     $node = $node->getAttribute('parent');
-                    $types = $this->unpackTypes($node->type);
+                    $types = NodeTypeUnpacker::unpack($node->type);
                     $this->types->add($def, $types);
                     break;
                 case $node instanceof Param:
-                    $types = $this->unpackTypes($node->type);
+                    $types = NodeTypeUnpacker::unpack($node->type);
                     $this->types->add($def, $types);
                     break;
             }
@@ -161,32 +156,5 @@ final class TypeCollector
             $types = $this->typeExpr($parent->expr);
             $this->types->add($def, $types);
         }
-    }
-
-    /** @return string[] */
-    private function unpackTypes(Identifier|Name|ComplexType|null ...$types): array
-    {
-        $typeNames = [];
-        foreach ($types as $type) {
-            switch (true) {
-                case $type instanceof Name:
-                    $typeNames = array_merge($typeNames, $this->unpackNamedType($type));
-                    break;
-                case $type instanceof IntersectionType:
-                case $type instanceof UnionType:
-                    $typeNames = array_merge($typeNames, $this->unpackTypes(...$type->types));
-                    break;
-                case $type instanceof NullableType:
-                    $typeNames = array_merge($typeNames, $this->unpackTypes($type->type));
-                    break;
-            }
-        }
-        return $typeNames;
-    }
-
-    /** @return string[] */
-    private function unpackNamedType(Name $type): array
-    {
-        return [IdentifierBuilder::fqClassName($type)];
     }
 }
