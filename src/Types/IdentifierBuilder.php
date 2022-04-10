@@ -23,10 +23,10 @@ final class IdentifierBuilder
 
         if ($node instanceof FunctionLike) {
             $functionLikeName = self::functionLikeName($node);
-            $name = "{$functionLikeName}::$name";
+            $name = "{$functionLikeName}::{$name}";
         } elseif ($node instanceof ClassLike) {
             $classLikeName = self::classLikeName($node);
-            $name = "{$classLikeName}::$name";
+            $name = "{$classLikeName}::{$name}";
         }
         return self::fqName($node, $name);
     }
