@@ -30,7 +30,8 @@
         "php": "^8.0",
         "ext-json": "*",
         "composer-runtime-api": "^2.2",
-        "nikic/php-parser": "^4.13"
+        "nikic/php-parser": "^4.13",
+        "phpstan/phpdoc-parser": "^1.4"
     },
     "require-dev": {
         "phpstan/extension-installer": "^1.1",
