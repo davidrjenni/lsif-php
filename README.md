@@ -41,9 +41,13 @@ jobs:
     runs-on: ubuntu-latest
     container: davidrjenni/lsif-php:main
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Generate LSIF data
         run: lsif-php
+      - name: Apply container owner mismatch workaround
+        run: |
+          # FIXME: see https://github.com/actions/checkout/issues/760
+          git config --global --add safe.directory ${GITHUB_WORKSPACE}
       - name: Upload LSIF data
         run: src lsif upload -github-token=${{ secrets.GITHUB_TOKEN }}
 ```
