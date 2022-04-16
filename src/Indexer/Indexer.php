@@ -138,6 +138,9 @@ final class Indexer
         foreach ($this->files as $path) {
             $code = FileReader::read($path);
             $stmts = $this->parser->parse($code);
+            if ($stmts === null) {
+                continue;
+            }
             $id = $this->emitter->emitDocument($path, self::LANGUAGE_PHP);
             $doc = new Document($id, $path, $code, $stmts);
             $this->documents[$id] = $doc;
