@@ -42,8 +42,12 @@ final class Composer
     {
         $this->deps = [];
 
-        $packages = array_merge($lock['packages'] ?? [], $lock['packages-dev'] ?? []);
-        foreach ($packages as $pkg) {
+        $packages = is_array($lock['packages']) ? $lock['packages'] : [];
+        $packagesDev = is_array($lock['packages-dev']) ? $lock['packages-dev'] : [];
+        foreach (array_merge($packages, $packagesDev) as $pkg) {
+            if (!is_array($pkg)) {
+                continue;
+            }
             $namespaces = array_keys($pkg['autoload']['psr-4'] ?? []);
             if (count($namespaces) === 0) {
                 continue;
