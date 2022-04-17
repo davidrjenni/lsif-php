@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LsifPhp\Types;
 
+use LsifPhp\Types\Internal\ClassLikeUtil;
 use PhpParser\Node;
 use PhpParser\Node\FunctionLike;
 use PhpParser\Node\Name;

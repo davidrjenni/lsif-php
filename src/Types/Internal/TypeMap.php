@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LsifPhp\Types\Internal;
 
-use LsifPhp\Types\ClassLikeUtil;
 use LsifPhp\Types\Definition;
 use LsifPhp\Types\IdentifierBuilder;
 use PhpParser\Node\Expr\Variable;

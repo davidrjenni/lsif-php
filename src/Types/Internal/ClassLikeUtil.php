@@ -2,12 +2,15 @@
 
 declare(strict_types=1);
 
-namespace LsifPhp\Types;
+namespace LsifPhp\Types\Internal;
 
 use PhpParser\Node;
 use PhpParser\Node\Stmt\ClassLike;
 
-/** ClassLikeUtil provides utility methods to retrieve class like AST nodes. */
+/**
+ * ClassLikeUtil provides utility methods to retrieve class like AST nodes.
+ * @internal
+ */
 final class ClassLikeUtil
 {
     /** Returns the nearest class like parent node. */
