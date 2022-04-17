@@ -88,22 +88,25 @@ final class DefinitionCollectorTest extends TestCase
         $this->assertDefinition('Class2::c2m4()::j', 47, false);
         $this->assertDefinition('Class2::c2m4()::k', 47, false);
 
-        $this->assertDefinition('Class3::c3p1', 9, true);
+        $this->assertDefinition('Class3::$c3p1', 9, true);
 
         $this->assertDefinition('Class4::c4m4()', 26, false);
 
-        $this->assertDefinition('Class7::c7p1', 9, false);
+        $this->assertDefinition('Class6::c6p1', 9, false);
+        $this->assertDefinition('Class6::$c6p1', 11, false);
+
+        $this->assertDefinition('Class7::$c7p1', 9, false);
         $this->assertDefinition('Class7::__construct()::c7p1', 11, false);
 
         $this->assertDefinition('Class8::C8C2', 12, true, 'Class8 constants');
         $this->assertDefinition('Class8::__construct()::c8p1', 15, false);
-        $this->assertDefinition('Class8::c8p1', 15, false);
+        $this->assertDefinition('Class8::$c8p1', 15, false);
         $this->assertDefinition('Class8::c8m1()', 19, false);
         $this->assertDefinition('Class8::c8m2()::c8v2', 27, false);
         $this->assertDefinition('Class8::c8m2()::anon-func-131()::c8v3p1', 29, false);
         $this->assertDefinition('Class8::c8m2()::anon-func-152()::c8v4v1', 32, false);
 
-        $this->assertDefinition('Class8::c8m2()::anon-func-152()::anon-class-198::c8v4v2p1', 37, false);
+        $this->assertDefinition('Class8::c8m2()::anon-func-152()::anon-class-198::$c8v4v2p1', 37, false);
         $this->assertDefinition('Class8::c8m2()::anon-func-152()::anon-class-198::__construct()', 39, true);
         $this->assertDefinition('Class8::c8m2()::anon-func-152()::anon-class-198::__construct()::c8v4v2p1', 39, false);
         $this->assertDefinition('Class8::c8m2()::anon-func-152()::anon-class-198::c8v4v2m1()', 45, true);

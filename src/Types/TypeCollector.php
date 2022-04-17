@@ -81,7 +81,7 @@ final class TypeCollector
             && $expr->name instanceof Identifier
         ) {
             $types = $this->typeExpr($expr->var);
-            return $this->types->classType($types, $expr->name->toString());
+            return $this->types->propertyType($types, $expr->name->toString());
         }
         if ($expr instanceof StaticCall && $expr->name instanceof Identifier) {
             $types = $expr->class instanceof Name
@@ -93,7 +93,7 @@ final class TypeCollector
             $types = $expr->class instanceof Name
                 ? [IdentifierBuilder::fqClassName($expr->class)]
                 : $this->typeExpr($expr->class);
-            return $this->types->classType($types, $expr->name->toString());
+            return $this->types->propertyType($types, $expr->name->toString());
         }
         if ($expr instanceof Ternary) {
             $elseTypes = $this->typeExpr($expr->else);

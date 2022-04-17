@@ -6,6 +6,7 @@
 	<file>bin</file>
 	<file>src</file>
 	<file>tests</file>
+	<exclude-pattern>tests/Types/TestData/*</exclude-pattern>
 
 	<rule ref="PSR12">
 		<exclude name="Generic.Files.LineLength"/>

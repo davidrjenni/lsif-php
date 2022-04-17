@@ -6,6 +6,8 @@ namespace Tests\Types\TestData;
 
 class Class6
 {
+    private const c6p1 = -1; // same name as property
+
     private AbstractClass1 $c6p1;
 
     public function __construct(AbstractClass1 $c6p1)

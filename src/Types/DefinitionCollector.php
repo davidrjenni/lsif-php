@@ -107,7 +107,7 @@ final class DefinitionCollector
         $this->addDef(
             $docId,
             $const->name,
-            IdentifierBuilder::fqName($classConst, $const->name->toString()),
+            IdentifierBuilder::fqConstName($classConst, $const->name->toString()),
             $const,
             !$classConst->isPrivate(),
             $classConst->getDocComment(),
@@ -119,7 +119,7 @@ final class DefinitionCollector
         $this->addDef(
             $docId,
             $prop->name,
-            IdentifierBuilder::fqName($property, $prop->name->toString()),
+            IdentifierBuilder::fqPropertyName($property, $prop->name),
             $prop,
             !$property->isPrivate(),
             $property->getDocComment(),
@@ -131,7 +131,7 @@ final class DefinitionCollector
         $this->addDef(
             $docId,
             $method->name,
-            IdentifierBuilder::fqName($method, "{$method->name}()"),
+            IdentifierBuilder::fqMethodName($method, $method->name->toString()),
             $method,
             !$method->isPrivate(),
             $method->getDocComment(),
@@ -151,7 +151,7 @@ final class DefinitionCollector
             $this->addDef(
                 $docId,
                 $name,
-                IdentifierBuilder::fqName($param->getAttribute('parent'), $name->toString()),
+                IdentifierBuilder::fqPropertyName($param->getAttribute('parent'), $name),
                 $param,
                 !((bool) ($param->flags & Class_::MODIFIER_PRIVATE)),
                 $param->getDocComment(),
@@ -161,7 +161,7 @@ final class DefinitionCollector
         $this->addDef(
             $docId,
             $name,
-            IdentifierBuilder::fqName($param, $name->toString()),
+            IdentifierBuilder::fqParamName($param, $name->toString()),
             $param,
             false,
             $param->getDocComment(),
@@ -208,7 +208,7 @@ final class DefinitionCollector
         if (!is_string($var->name)) {
             return;
         }
-        $fqName = IdentifierBuilder::fqName($var, $var->name);
+        $fqName = IdentifierBuilder::fqVarName($var, $var->name);
         $this->addDef($docId, $var, $fqName, $var, false, $doc);
     }
 

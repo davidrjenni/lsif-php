@@ -202,8 +202,7 @@ final class Indexer
                     && $node->class instanceof Name
                     && !$node->name instanceof Error
                 ) {
-                    $fqClassName = IdentifierBuilder::fqClassName($node->class);
-                    $fqName = "{$fqClassName}::{$node->name}";
+                    $fqName = IdentifierBuilder::fqConstName($node->class, $node->name->toString());
                     $this->emitReference($fqName, $doc, $node->name);
                     return;
                 }
@@ -214,7 +213,7 @@ final class Indexer
                 ) {
                     $types = $this->typeCollector->typeExpr($node->var);
                     foreach ($types as $type) {
-                        $fqName = "{$type}::{$node->name}()";
+                        $fqName = IdentifierBuilder::fqMethodName($type, $node->name->toString());
                         $this->emitReference($fqName, $doc, $node->name);
                     }
                     return;
@@ -226,7 +225,7 @@ final class Indexer
                 ) {
                     $types = $this->typeCollector->typeExpr($node->var);
                     foreach ($types as $type) {
-                        $fqName = "{$type}::{$node->name}";
+                        $fqName = IdentifierBuilder::fqPropertyName($type, $node->name);
                         $this->emitReference($fqName, $doc, $node->name);
                     }
                     return;
@@ -239,15 +238,13 @@ final class Indexer
                 }
 
                 if ($node instanceof StaticCall && $node->class instanceof Name && $node->name instanceof Identifier) {
-                    $fqClassName = IdentifierBuilder::fqClassName($node->class);
-                    $fqName = "{$fqClassName}::{$node->name}()";
+                    $fqName = IdentifierBuilder::fqMethodName($node->class, $node->name->toString());
                     $this->emitReference($fqName, $doc, $node->name);
                     return;
                 }
 
                 if ($node instanceof StaticPropertyFetch && $node->class instanceof Name && $node->name instanceof Identifier) {
-                    $fqClassName = IdentifierBuilder::fqClassName($node->class);
-                    $fqName = "{$fqClassName}::{$node->name}";
+                    $fqName = IdentifierBuilder::fqPropertyName($node->class, $node->name);
                     $this->emitReference($fqName, $doc, $node->name);
                     return;
                 }
@@ -257,7 +254,7 @@ final class Indexer
                     && !($node->getAttribute('parent') instanceof Param)
                     && is_string($node->name)
                 ) {
-                    $fqName = IdentifierBuilder::fqName($node, $node->name);
+                    $fqName = IdentifierBuilder::fqVarName($node, $node->name);
                     $this->emitReference($fqName, $doc, $node);
                     return;
                 }

@@ -77,26 +77,9 @@ final class TypeMap
      * @param  string[]  $classNames
      * @return string[]
      */
-    public function classType(array $classNames, string $name): array
+    public function propertyType(array $classNames, string $name): array
     {
-        $types = [];
-        foreach ($classNames as $className) {
-            $fqName = "{$className}::{$name}";
-            if (isset($this->types[$fqName])) {
-                $types = array_merge($types, $this->types[$fqName]);
-            }
-        }
-        if (count($types) > 0) {
-            return $types;
-        }
-        foreach ($classNames as $class) {
-            $uppers = $this->uppers[$class] ?? [];
-            $types = $this->classType($uppers, $name);
-            if (count($types) > 0) {
-                return $types;
-            }
-        }
-        return $types;
+        return $this->classType($classNames, '$' . $name);
     }
 
     /**
@@ -119,6 +102,32 @@ final class TypeMap
         return [];
     }
 
+    /**
+     * @param  string[]  $classNames
+     * @return string[]
+     */
+    private function classType(array $classNames, string $name): array
+    {
+        $types = [];
+        foreach ($classNames as $className) {
+            $fqName = "{$className}::{$name}";
+            if (isset($this->types[$fqName])) {
+                $types = array_merge($types, $this->types[$fqName]);
+            }
+        }
+        if (count($types) > 0) {
+            return $types;
+        }
+        foreach ($classNames as $class) {
+            $uppers = $this->uppers[$class] ?? [];
+            $types = $this->classType($uppers, $name);
+            if (count($types) > 0) {
+                return $types;
+            }
+        }
+        return $types;
+    }
+
     /** @return string[] */
     public function varType(Variable $var): array
     {
@@ -129,7 +138,7 @@ final class TypeMap
         if (!is_string($var->name)) {
             return [];
         }
-        $fqName = IdentifierBuilder::fqName($var, $var->name);
+        $fqName = IdentifierBuilder::fqVarName($var, $var->name);
         return $this->types[$fqName] ?? [];
     }
 }
