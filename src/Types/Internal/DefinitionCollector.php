@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace LsifPhp\Types;
+namespace LsifPhp\Types\Internal;
 
 use LsifPhp\Parser\NodeTraverserFactory;
+use LsifPhp\Types\Definition;
+use LsifPhp\Types\IdentifierBuilder;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Const_;
@@ -25,7 +27,10 @@ use PhpParser\Node\Stmt\PropertyProperty;
 
 use function is_string;
 
-/** DefinitionCollector collects identifier definition information from AST nodes. */
+/**
+ * DefinitionCollector collects identifier definition information from AST nodes.
+ * @internal
+ */
 final class DefinitionCollector
 {
     private NodeTraverserFactory $nodeTraverserFactory;

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace LsifPhp\Types;
 
+use LsifPhp\Types\Internal\DefinitionCollector;
+use LsifPhp\Types\Internal\TypeCollector;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Name;
 use PhpParser\Node\Stmt;

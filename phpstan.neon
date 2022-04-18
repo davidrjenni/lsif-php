@@ -6,6 +6,6 @@ parameters:
     - tests
   excludePaths:
     - tests/Indexer/TestData/*
-    - tests/Types/TestData/*
+    - tests/Types/Internal/TestData/*
   ignoreErrors:
     - '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assert.*$#'

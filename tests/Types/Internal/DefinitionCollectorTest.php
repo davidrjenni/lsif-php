@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Types;
+namespace Tests\Types\Internal;
 
 use LsifPhp\File\FileReader;
 use LsifPhp\Parser\ParserFactory;
 use LsifPhp\Types\Definition;
-use LsifPhp\Types\DefinitionCollector;
+use LsifPhp\Types\Internal\DefinitionCollector;
 use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -89,6 +89,8 @@ final class DefinitionCollectorTest extends TestCase
         $this->assertDefinition('Class2::c2m4()::k', 47, false);
 
         $this->assertDefinition('Class3::$c3p1', 9, true);
+        $this->assertDefinition('Class3::c3m1()', 16, true);
+        $this->assertDefinition('Class3::c3p1()', 21, true);
 
         $this->assertDefinition('Class4::c4m4()', 26, false);
 

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Types;
+namespace Tests\Types\Internal;
 
 use LsifPhp\File\FileReader;
 use LsifPhp\Parser\ParserFactory;
-use LsifPhp\Types\DefinitionCollector;
-use LsifPhp\Types\TypeCollector;
+use LsifPhp\Types\Internal\DefinitionCollector;
+use LsifPhp\Types\Internal\TypeCollector;
 use PhpParser\Node;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\MethodCall;

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace LsifPhp\Types;
+namespace LsifPhp\Types\Internal;
 
-use LsifPhp\Types\Internal\NodeTypeUnpacker;
-use LsifPhp\Types\Internal\TypeMap;
+use LsifPhp\Types\Definition;
+use LsifPhp\Types\IdentifierBuilder;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Expr\Clone_;
@@ -32,7 +32,10 @@ use PhpParser\Node\Stmt\PropertyProperty;
 use function array_map;
 use function array_merge;
 
-/** TypeCollector collects types of expressions which evaluate to named types. */
+/**
+ * TypeCollector collects types of expressions which evaluate to named types.
+ * @internal
+ */
 final class TypeCollector
 {
     private TypeMap $types;
