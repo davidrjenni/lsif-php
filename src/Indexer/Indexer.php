@@ -13,9 +13,8 @@ use LsifPhp\Protocol\Emitter;
 use LsifPhp\Protocol\HoverResultContent;
 use LsifPhp\Protocol\Pos;
 use LsifPhp\Protocol\ToolInfo;
-use LsifPhp\Types\DefinitionCollector;
 use LsifPhp\Types\IdentifierBuilder;
-use LsifPhp\Types\TypeCollector;
+use LsifPhp\Types\TypeInfo;
 use PhpParser\Node;
 use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\Error;
@@ -53,9 +52,7 @@ final class Indexer
 
     private HoverContentGenerator $hoverContentGenerator;
 
-    private DefinitionCollector $definitionCollector;
-
-    private TypeCollector $typeCollector;
+    private TypeInfo $typeInfo;
 
     private Composer $composer;
 
@@ -85,8 +82,7 @@ final class Indexer
         $this->parser = ParserFactory::create();
         $this->nodeTraverserFactory = new NodeTraverserFactory();
         $this->hoverContentGenerator = new HoverContentGenerator();
-        $this->definitionCollector = new DefinitionCollector();
-        $this->typeCollector = new TypeCollector();
+        $this->typeInfo = new TypeInfo();
         $this->projectId = -1;
         $this->files = [];
         $this->documents = [];
@@ -144,15 +140,14 @@ final class Indexer
             $id = $this->emitter->emitDocument($path, self::LANGUAGE_PHP);
             $doc = new Document($id, $path, $code, $stmts);
             $this->documents[$id] = $doc;
-            $this->definitionCollector->collect($id, $stmts);
+            $this->typeInfo->collectDefinitions($id, $stmts);
         }
-        $defs = $this->definitionCollector->definitions();
-        $this->typeCollector->collect($defs);
+        $this->typeInfo->collectTypes();
     }
 
     private function emitDefinitions(): void
     {
-        $defs = $this->definitionCollector->definitions();
+        $defs = $this->typeInfo->definitions();
         foreach ($defs as $def) {
             $d = $this->emitDefinition(
                 $def->name(),
@@ -202,8 +197,10 @@ final class Indexer
                     && $node->class instanceof Name
                     && !$node->name instanceof Error
                 ) {
-                    $fqName = IdentifierBuilder::fqConstName($node->class, $node->name->toString());
-                    $this->emitReference($fqName, $doc, $node->name);
+                    $fqName = $this->typeInfo->findConstant($node->class, $node->name->toString());
+                    if ($fqName !== '') {
+                        $this->emitReference($fqName, $doc, $node->name);
+                    }
                     return;
                 }
 
@@ -211,9 +208,8 @@ final class Indexer
                     ($node instanceof MethodCall || $node instanceof NullsafeMethodCall)
                     && $node->name instanceof Identifier
                 ) {
-                    $types = $this->typeCollector->typeExpr($node->var);
-                    foreach ($types as $type) {
-                        $fqName = IdentifierBuilder::fqMethodName($type, $node->name->toString());
+                    $fqName = $this->typeInfo->findMethod($node->var, $node->name->toString());
+                    if ($fqName !== '') {
                         $this->emitReference($fqName, $doc, $node->name);
                     }
                     return;
@@ -223,9 +219,8 @@ final class Indexer
                     ($node instanceof PropertyFetch || $node instanceof NullsafePropertyFetch)
                     && $node->name instanceof Identifier
                 ) {
-                    $types = $this->typeCollector->typeExpr($node->var);
-                    foreach ($types as $type) {
-                        $fqName = IdentifierBuilder::fqPropertyName($type, $node->name);
+                    $fqName = $this->typeInfo->findProperty($node->var, $node->name->toString());
+                    if ($fqName !== '') {
                         $this->emitReference($fqName, $doc, $node->name);
                     }
                     return;
@@ -237,15 +232,19 @@ final class Indexer
                     return;
                 }
 
-                if ($node instanceof StaticCall && $node->class instanceof Name && $node->name instanceof Identifier) {
-                    $fqName = IdentifierBuilder::fqMethodName($node->class, $node->name->toString());
-                    $this->emitReference($fqName, $doc, $node->name);
+                if ($node instanceof StaticCall && $node->name instanceof Identifier) {
+                    $fqName = $this->typeInfo->findMethod($node->class, $node->name->toString());
+                    if ($fqName !== '') {
+                        $this->emitReference($fqName, $doc, $node->name);
+                    }
                     return;
                 }
 
-                if ($node instanceof StaticPropertyFetch && $node->class instanceof Name && $node->name instanceof Identifier) {
-                    $fqName = IdentifierBuilder::fqPropertyName($node->class, $node->name);
-                    $this->emitReference($fqName, $doc, $node->name);
+                if ($node instanceof StaticPropertyFetch && $node->name instanceof Identifier) {
+                    $fqName = $this->typeInfo->findProperty($node->class, $node->name->toString());
+                    if ($fqName !== '') {
+                        $this->emitReference($fqName, $doc, $node->name);
+                    }
                     return;
                 }
 

@@ -50,6 +50,12 @@ final class DefinitionCollector
         return $this->definitions;
     }
 
+    /** Reports whether the given fully-qualified name is defined or not. */
+    public function defined(string $fqName): bool
+    {
+        return isset($this->definitions[$fqName]);
+    }
+
     /**
      * Collects all definitions from the given statements.
      *
@@ -214,7 +220,7 @@ final class DefinitionCollector
 
     private function addDef(int $docId, Node $name, string $ident, Node $def, bool $exported, ?Doc $doc): void
     {
-        if (!isset($this->definitions[$ident])) {
+        if (!$this->defined($ident)) {
             $this->definitions[$ident] = new Definition($docId, $name, $ident, $def, $exported, $doc);
         }
     }

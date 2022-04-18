@@ -31,6 +31,27 @@ final class TypeMap
         $this->uppers = [];
     }
 
+    /**
+     * Returns all fully-qualified names of "upper" class-likes, e.g. parent classes, interfaces or traits.
+     *
+     * @param  string[]  $classes
+     * @return string[]
+     */
+    public function uppers(array $classes): array
+    {
+        $uppers = [];
+        foreach ($classes as $class) {
+            if (isset($this->uppers[$class])) {
+                $uppers = array_merge($uppers, $this->uppers[$class]);
+            }
+        }
+        if (count($uppers) > 0) {
+            $upperUppers = $this->uppers($uppers);
+            return array_merge($uppers, $upperUppers);
+        }
+        return $uppers;
+    }
+
     /** @param  string[]  $types */
     public function add(Definition $d, array $types): void
     {

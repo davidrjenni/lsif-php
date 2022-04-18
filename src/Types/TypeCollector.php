@@ -37,10 +37,20 @@ final class TypeCollector
 {
     private TypeMap $types;
 
-
     public function __construct()
     {
         $this->types = new TypeMap();
+    }
+
+    /**
+     * Returns all fully-qualified names of "upper" class-likes, e.g. parent classes, interfaces or traits.
+     *
+     * @param  string[]  $classes
+     * @return string[]
+     */
+    public function uppers(array $classes): array
+    {
+        return $this->types->uppers($classes);
     }
 
     /**
@@ -112,7 +122,7 @@ final class TypeCollector
     }
 
     /**
-     * Collects the property types and return types of methods from the given definitions.
+     * Collects the expression types from the given definitions.
      *
      * @param  array<string, Definition>  $definitions
      */
