@@ -122,7 +122,7 @@ final class DefinitionCollectorTest extends TestCase
 
     private function assertDefinition(string $ident, int $startLine, bool $exported, ?string $doc = null): void
     {
-        $def = $this->definitions["Tests\\Types\\TestData\\{$ident}"] ?? null;
+        $def = $this->definitions["Tests\\Types\\Internal\\TestData\\{$ident}"] ?? null;
         $this->assertNotNull($def);
 
         $this->assertEquals($startLine, $def->name()->getStartLine());

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Types\TestData;
+namespace Tests\Types\Internal\TestData;
 
 interface Interface1
 {

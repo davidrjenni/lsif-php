@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Types\TestData;
+namespace Tests\Types\Internal\TestData;
 
 /** Class2 is a class for testing. */
 class Class2
