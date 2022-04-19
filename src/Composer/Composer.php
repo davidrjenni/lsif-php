@@ -6,12 +6,14 @@ namespace LsifPhp\Composer;
 
 use LsifPhp\File\FileReader;
 
+use function array_keys;
 use function array_merge;
 use function array_values;
 use function count;
 use function is_array;
 use function is_string;
 use function json_decode;
+use function sort;
 use function str_starts_with;
 use function substr;
 
