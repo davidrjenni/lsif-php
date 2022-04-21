@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LsifPhp\Types;
 
+use LsifPhp\Types\Internal\Ast\Parser;
 use LsifPhp\Types\Internal\DefinitionCollector;
 use LsifPhp\Types\Internal\TypeCollector;
 use PhpParser\Node\Expr;
@@ -79,7 +80,7 @@ final class TypeInfo
     {
         $classes = $expr instanceof Name
             ? [IdentifierBuilder::fqClassName($expr)]
-            : $this->typeCollector->typeExpr($expr);
+            : Parser::flatten($this->typeCollector->typeExpr($expr));
         $uppers = $this->typeCollector->uppers($classes);
         $candidates = array_merge($classes, $uppers);
         foreach ($candidates as $class) {

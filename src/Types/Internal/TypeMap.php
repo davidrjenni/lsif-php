@@ -6,6 +6,8 @@ namespace LsifPhp\Types\Internal;
 
 use LsifPhp\Types\Definition;
 use LsifPhp\Types\IdentifierBuilder;
+use LsifPhp\Types\Internal\Ast\Parser;
+use LsifPhp\Types\Internal\Ast\Type;
 use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Class_;
@@ -19,7 +21,7 @@ use function is_string;
 /** @internal */
 final class TypeMap
 {
-    /** @var array<string, string[]> */
+    /** @var array<string, Type> */
     public array $types;
 
     /** @var array<string, string[]> */
@@ -52,11 +54,10 @@ final class TypeMap
         return $uppers;
     }
 
-    /** @param  string[]  $types */
-    public function add(Definition $d, array $types): void
+    public function add(Definition $d, ?Type $type): void
     {
-        if (count($types) > 0) {
-            $this->types[$d->identifier()] = $types;
+        if ($type !== null) {
+            $this->types[$d->identifier()] = $type;
         }
     }
 
@@ -94,72 +95,58 @@ final class TypeMap
         $this->uppers[$fqName][] = $name;
     }
 
-    /**
-     * @param  string[]  $classNames
-     * @return string[]
-     */
-    public function propertyType(array $classNames, string $name): array
+    /** @param  string[]  $classNames */
+    public function propertyType(array $classNames, string $name): ?Type
     {
         return $this->classType($classNames, '$' . $name);
     }
 
-    /**
-     * @param  string[]  $classNames
-     * @return string[]
-     */
-    public function methodType(array $classNames, string $method): array
+    /** @param  string[]  $classNames */
+    public function methodType(array $classNames, string $method): ?Type
     {
-        $types = $this->classType($classNames, "{$method}()");
-        if (count($types) > 0) {
-            return $types;
+        $type = $this->classType($classNames, "{$method}()");
+        if ($type !== null) {
+            return $type;
         }
         foreach ($classNames as $name) {
             $uppers = $this->uppers[$name] ?? [];
-            $types = $this->methodType($uppers, $method);
-            if (count($types) > 0) {
-                return $types;
+            $type = $this->methodType($uppers, $method);
+            if ($type !== null) {
+                return $type;
             }
         }
-        return [];
+        return null;
     }
 
-    /**
-     * @param  string[]  $classNames
-     * @return string[]
-     */
-    private function classType(array $classNames, string $name): array
+    /** @param  string[]  $classNames */
+    private function classType(array $classNames, string $name): ?Type
     {
-        $types = [];
         foreach ($classNames as $className) {
             $fqName = "{$className}::{$name}";
             if (isset($this->types[$fqName])) {
-                $types = array_merge($types, $this->types[$fqName]);
+                return $this->types[$fqName];
             }
-        }
-        if (count($types) > 0) {
-            return $types;
         }
         foreach ($classNames as $class) {
             $uppers = $this->uppers[$class] ?? [];
-            $types = $this->classType($uppers, $name);
-            if (count($types) > 0) {
-                return $types;
+            $type = $this->classType($uppers, $name);
+            if ($type !== null) {
+                return $type;
             }
         }
-        return $types;
+        return null;
     }
 
-    /** @return string[] */
-    public function varType(Variable $var): array
+    public function varType(Variable $var): ?Type
     {
         if ($var->name === 'this') {
             $class = ClassLikeUtil::nearestClassLike($var);
-            return $class !== null ? [IdentifierBuilder::fqClassName($class)] : [];
+            return $class !== null ? Parser::fromNode($class) : null;
         }
         if (!is_string($var->name)) {
-            return [];
+            return null;
         }
         $fqName = IdentifierBuilder::fqVarName($var, $var->name);
-        return $this->types[$fqName] ?? [];
+        return $this->types[$fqName] ?? null;
     }
 }
