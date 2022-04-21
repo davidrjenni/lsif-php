@@ -142,6 +142,9 @@ final class HoverContentGenerator
         if ($classProperty->isStatic()) {
             $modifiers = "{$modifiers} static";
         }
+        if ($classProperty->isReadonly()) {
+            $modifiers = "{$modifiers} readonly";
+        }
 
         $info = $classProperty->type !== null
             ? "{$modifiers} " . $this->typeInfo($classProperty->type) . " \${$property->name}"
