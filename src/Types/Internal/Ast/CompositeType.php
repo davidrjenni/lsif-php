@@ -29,11 +29,13 @@ final class CompositeType implements Type
                 $ts[] = $t;
             }
         }
-        if (count($ts) === 0) {
-            return null;
+        switch (count($ts)) {
+            case 0:
+                return null;
+            case 1:
+                return $ts[0];
+            default:
+                return new CompositeType($ts);
         }
-        return count($ts) > 1
-            ? new CompositeType($ts)
-            : $ts[0];
     }
 }
