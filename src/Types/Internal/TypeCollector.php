@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LsifPhp\Types\Internal;
 
+use LsifPhp\Parser\DocCommentParser;
 use LsifPhp\Types\Definition;
 use LsifPhp\Types\IdentifierBuilder;
 use LsifPhp\Types\Internal\Ast\CompositeType;
@@ -39,9 +40,12 @@ final class TypeCollector
 {
     private TypeMap $types;
 
+    private DocCommentParser $docCommentParser;
+
     public function __construct()
     {
         $this->types = new TypeMap();
+        $this->docCommentParser = new DocCommentParser();
     }
 
     /**
@@ -137,12 +141,26 @@ final class TypeCollector
                     break;
                 case $node instanceof ClassMethod:
                     $type = Parser::fromNode($node->returnType);
+                    if ($type === null) {
+                        $returnType = $this->docCommentParser->parseReturnType($node);
+                        if ($returnType === null) {
+                            break;
+                        }
+                        $type = Parser::fromDocType($node, $returnType);
+                    }
                     $this->types->add($def, $type);
                     break;
                 case $node instanceof PropertyProperty:
                     /** @var Property $node */
                     $node = $node->getAttribute('parent');
                     $type = Parser::fromNode($node->type);
+                    if ($type === null) {
+                        $propType = $this->docCommentParser->parsePropertyType($node);
+                        if ($propType === null) {
+                            break;
+                        }
+                        $type = Parser::fromDocType($node, $propType);
+                    }
                     $this->types->add($def, $type);
                     break;
                 case $node instanceof Param:

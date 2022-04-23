@@ -8,8 +8,6 @@ use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PHPStan\PhpDocParser\Ast\PhpDoc\MixinTagValueNode;
 use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocNode;
-use PHPStan\PhpDocParser\Ast\PhpDoc\ReturnTagValueNode;
-use PHPStan\PhpDocParser\Ast\PhpDoc\VarTagValueNode;
 use PHPStan\PhpDocParser\Ast\Type\TypeNode;
 use PHPStan\PhpDocParser\Lexer\Lexer;
 use PHPStan\PhpDocParser\Parser\ConstExprParser;
@@ -18,6 +16,8 @@ use PHPStan\PhpDocParser\Parser\TokenIterator;
 use PHPStan\PhpDocParser\Parser\TypeParser;
 
 use function array_map;
+use function count;
+use function reset;
 
 final class DocCommentParser
 {
@@ -45,28 +45,32 @@ final class DocCommentParser
         return array_map(fn(MixinTagValueNode $tag): TypeNode => $tag->type, $tags);
     }
 
-    /** @return TypeNode[] */
-    public function parsePropertyTypes(Node $node): array
+    public function parsePropertyType(Node $node): ?TypeNode
     {
         $doc = $node->getDocComment();
         if ($doc === null) {
-            return [];
+            return null;
         }
         $docNode = $this->parse($doc);
         $tags = $docNode->getVarTagValues();
-        return array_map(fn(VarTagValueNode $tag): TypeNode => $tag->type, $tags);
+        if (count($tags) === 0) {
+            return null;
+        }
+        return reset($tags)->type;
     }
 
-    /** @return TypeNode[] */
-    public function parseReturnTypes(Node $node): array
+    public function parseReturnType(Node $node): ?TypeNode
     {
         $doc = $node->getDocComment();
         if ($doc === null) {
-            return [];
+            return null;
         }
         $docNode = $this->parse($doc);
         $tags = $docNode->getReturnTagValues();
-        return array_map(fn(ReturnTagValueNode $tag): TypeNode => $tag->type, $tags);
+        if (count($tags) === 0) {
+            return null;
+        }
+        return reset($tags)->type;
     }
 
     private function parse(Doc $doc): PhpDocNode

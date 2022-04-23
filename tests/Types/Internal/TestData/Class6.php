@@ -17,6 +17,19 @@ class Class6
 
     public function c6m1(): void
     {
-        $this->c6p1->ac1m1()->c3p1->c1m1()::c2m2();
+        $this->c6m2()->c6p1->ac1m1()->c3p1->c1m1()::c2m2();
+    }
+
+    /** @return self */
+    public function c6m2()
+    {
+        $this->c6m3()->ac1m1();
+        return $this;
+    }
+
+    /** @return \Tests\Types\Internal\TestData\AbstractClass1 */
+    public function c6m3()
+    {
+        return $this->c6p1;
     }
 }

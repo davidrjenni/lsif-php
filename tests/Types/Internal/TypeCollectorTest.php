@@ -121,6 +121,14 @@ final class TypeCollectorTest extends TestCase
         $type = $this->typeCollector->typeExpr($expr);
         $this->assertTypesEquals(['Tests\Types\Internal\TestData\Class1'], $type);
 
+        $expr = $this->findMethodCall('Class6.php', 'c6m2');
+        $type = $this->typeCollector->typeExpr($expr);
+        $this->assertTypesEquals(['Tests\Types\Internal\TestData\Class6'], $type);
+
+        $expr = $this->findMethodCall('Class6.php', 'c6m3');
+        $type = $this->typeCollector->typeExpr($expr);
+        $this->assertTypesEquals(['Tests\Types\Internal\TestData\AbstractClass1'], $type);
+
         $expr = $this->findPropertyFetch('Class7.php', 'c7p1');
         $type = $this->typeCollector->typeExpr($expr);
         $this->assertTypesEquals(['Tests\Types\Internal\TestData\Interface2'], $type);
@@ -146,6 +154,10 @@ final class TypeCollectorTest extends TestCase
         $this->assertTypesEquals(['Tests\Types\Internal\TestData\Class1'], $type);
 
         $expr = $this->findMethodCall('Class8.php', 'c1m1');
+        $type = $this->typeCollector->typeExpr($expr);
+        $this->assertTypesEquals(['Tests\Types\Internal\TestData\Class2'], $type);
+
+        $expr = $this->findMethodCall('Class8.php', 'c7m4');
         $type = $this->typeCollector->typeExpr($expr);
         $this->assertTypesEquals(['Tests\Types\Internal\TestData\Class2'], $type);
 

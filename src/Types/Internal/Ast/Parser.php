@@ -94,8 +94,8 @@ final class Parser
                 return self::fromDocType($node, $type->type);
             case $type instanceof IdentifierTypeNode:
                 $name = str_starts_with($type->name, '\\')
-                    ? new FullyQualified(ltrim($type->name, '\\'))
-                    : new Name($type->name);
+                    ? new FullyQualified(ltrim($type->name, '\\'), ['parent' => $node])
+                    : new Name($type->name, ['parent' => $node]);
                 if ($name->isSpecialClassName()) {
                     $fqName = IdentifierBuilder::fqClassName($name);
                     return new NamedType($fqName);

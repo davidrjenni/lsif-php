@@ -97,8 +97,8 @@ final class DefinitionCollectorTest extends TestCase
         $this->assertDefinition('Class6::c6p1', 9, false);
         $this->assertDefinition('Class6::$c6p1', 11, false);
 
-        $this->assertDefinition('Class7::$c7p1', 9, false);
-        $this->assertDefinition('Class7::__construct()::c7p1', 11, false);
+        $this->assertDefinition('Class7::$c7p1', 10, false, '@var Interface2');
+        $this->assertDefinition('Class7::__construct()::c7p1', 12, false);
 
         $this->assertDefinition('Class8::C8C2', 12, true, 'Class8 constants');
         $this->assertDefinition('Class8::__construct()::c8p1', 15, false);
