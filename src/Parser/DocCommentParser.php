@@ -6,6 +6,7 @@ namespace LsifPhp\Parser;
 
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
+use PHPStan\PhpDocParser\Ast\PhpDoc\MixinTagValueNode;
 use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocNode;
 use PHPStan\PhpDocParser\Ast\PhpDoc\ReturnTagValueNode;
 use PHPStan\PhpDocParser\Ast\PhpDoc\VarTagValueNode;
@@ -30,6 +31,18 @@ final class DocCommentParser
         $typeParser = new TypeParser($constExprParser);
         $this->parser = new PhpDocParser($typeParser, $constExprParser);
         $this->lexer = new Lexer();
+    }
+
+    /** @return TypeNode[] */
+    public function parseMixins(Node $node): array
+    {
+        $doc = $node->getDocComment();
+        if ($doc === null) {
+            return [];
+        }
+        $docNode = $this->parse($doc);
+        $tags = $docNode->getMixinTagValues();
+        return array_map(fn(MixinTagValueNode $tag): TypeNode => $tag->type, $tags);
     }
 
     /** @return TypeNode[] */
