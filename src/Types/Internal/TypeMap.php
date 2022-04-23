@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LsifPhp\Types\Internal;
 
+use LsifPhp\Parser\DocCommentParser;
 use LsifPhp\Types\Definition;
 use LsifPhp\Types\IdentifierBuilder;
 use LsifPhp\Types\Internal\Ast\Parser;
@@ -16,6 +17,7 @@ use PhpParser\Node\Stmt\Interface_;
 
 use function array_merge;
 use function count;
+use function in_array;
 use function is_string;
 
 /** @internal */
@@ -27,10 +29,13 @@ final class TypeMap
     /** @var array<string, string[]> */
     private array $uppers;
 
+    private DocCommentParser $docCommentParser;
+
     public function __construct()
     {
         $this->types = [];
         $this->uppers = [];
+        $this->docCommentParser = new DocCommentParser();
     }
 
     /**
@@ -83,6 +88,8 @@ final class TypeMap
                 $this->addClassLikeUpper($classLike, $trait);
             }
         }
+
+        $this->addMixins($classLike);
     }
 
     private function addClassLikeUpper(ClassLike $classLike, Name $upper): void
@@ -93,6 +100,24 @@ final class TypeMap
         }
         $name = IdentifierBuilder::fqClassName($upper);
         $this->uppers[$fqName][] = $name;
+    }
+
+    private function addMixins(ClassLike $classLike): void
+    {
+        $mixins = $this->docCommentParser->parseMixins($classLike);
+        foreach ($mixins as $mixin) {
+            $type = Parser::fromDocType($classLike, $mixin);
+            $fqName = IdentifierBuilder::fqClassName($classLike);
+            $classNames = Parser::flatten($type);
+            foreach ($classNames as $class) {
+                if (!isset($this->uppers[$fqName])) {
+                    $this->uppers[$fqName] = [];
+                }
+                if ($fqName !== $class && !in_array($fqName, $this->uppers[$class] ?? [], true)) {
+                    $this->uppers[$fqName][] = $class;
+                }
+            }
+        }
     }
 
     /** @param  string[]  $classNames */
