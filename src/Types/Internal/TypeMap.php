@@ -20,7 +20,6 @@ use function count;
 use function in_array;
 use function is_string;
 
-/** @internal */
 final class TypeMap
 {
     /** @var array<string, Type> */

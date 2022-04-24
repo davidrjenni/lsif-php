@@ -27,10 +27,7 @@ use PhpParser\Node\Stmt\PropertyProperty;
 
 use function is_string;
 
-/**
- * DefinitionCollector collects identifier definition information from AST nodes.
- * @internal
- */
+/** DefinitionCollector collects identifier definition information from AST nodes. */
 final class DefinitionCollector
 {
     private NodeTraverserFactory $nodeTraverserFactory;

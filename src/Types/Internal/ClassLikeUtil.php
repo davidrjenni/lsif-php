@@ -8,10 +8,7 @@ use PhpParser\Node;
 use PhpParser\Node\Stmt\ClassLike;
 use PhpParser\Node\Stmt\Namespace_;
 
-/**
- * ClassLikeUtil provides utility methods to retrieve class like AST nodes.
- * @internal
- */
+/** ClassLikeUtil provides utility methods to retrieve class like AST nodes. */
 final class ClassLikeUtil
 {
     /** Returns the nearest class like parent node. */

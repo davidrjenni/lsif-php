@@ -32,10 +32,7 @@ use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Property;
 use PhpParser\Node\Stmt\PropertyProperty;
 
-/**
- * TypeCollector collects types of expressions which evaluate to named types.
- * @internal
- */
+/** TypeCollector collects types of expressions which evaluate to named types. */
 final class TypeCollector
 {
     private TypeMap $types;
