@@ -10,7 +10,13 @@ use LsifPhp\Indexer\Indexer;
 use LsifPhp\Protocol\Emitter;
 use LsifPhp\Protocol\ToolInfo;
 
-if (\in_array('-h', $argv, true) || \in_array('--help', $argv, true)) {
+$options = \getopt('h', ['help', 'memory-limit:']);
+if ($options === false) {
+    echo "Cannot parse options.\n";
+    exit(1);
+}
+
+if (isset($options['h']) || isset($options['help'])) {
     echo "usage: {$argv[0]} [options]\n\n";
     echo "lsif-php is an LSIF indexer for PHP\n\n";
     echo "Options:\n";
