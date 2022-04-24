@@ -11,7 +11,7 @@ use LsifPhp\Protocol\Emitter;
 use LsifPhp\Protocol\ToolInfo;
 
 $projectRoot = \getcwd();
-$toolInfo = new ToolInfo('lsif-php', '0.0.1', \array_splice($argv, 1));
+$toolInfo = new ToolInfo('lsif-php', '0.0.4', \array_splice($argv, 1));
 
 $git = new Git();
 $emitter = new Emitter();
