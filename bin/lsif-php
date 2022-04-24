@@ -20,10 +20,21 @@ if (isset($options['h']) || isset($options['help'])) {
     echo "usage: {$argv[0]} [options]\n\n";
     echo "lsif-php is an LSIF indexer for PHP\n\n";
     echo "Options:\n";
-    echo "  -h --help  display this help and exit\n";
+    echo "  -h --help               display this help and exit\n";
+    echo "     --memory-limit=\"1G\"  memory limit\n";
     exit(0);
 }
 
+$memoryLimit = $options['memory-limit'] ?? '1G';
+if (!\is_string($memoryLimit)) {
+    echo "Invalid memory limit.\n";
+    exit(1);
+}
+
+if (\ini_set('memory_limit', $memoryLimit) === false) {
+    echo "Cannot set memory limit {$memoryLimit}.\n";
+    exit(1);
+}
 
 $projectRoot = \getcwd();
 $toolInfo = new ToolInfo('lsif-php', '0.0.4', \array_splice($argv, 1));
