@@ -10,6 +10,15 @@ use LsifPhp\Indexer\Indexer;
 use LsifPhp\Protocol\Emitter;
 use LsifPhp\Protocol\ToolInfo;
 
+if (\in_array('-h', $argv, true) || \in_array('--help', $argv, true)) {
+    echo "usage: {$argv[0]} [options]\n\n";
+    echo "lsif-php is an LSIF indexer for PHP\n\n";
+    echo "Options:\n";
+    echo "  -h --help  display this help and exit\n";
+    exit(0);
+}
+
+
 $projectRoot = \getcwd();
 $toolInfo = new ToolInfo('lsif-php', '0.0.4', \array_splice($argv, 1));
 
