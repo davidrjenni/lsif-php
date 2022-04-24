@@ -10,7 +10,9 @@ use LsifPhp\Types\IdentifierBuilder;
 use LsifPhp\Types\Internal\Ast\CompositeType;
 use LsifPhp\Types\Internal\Ast\Parser;
 use LsifPhp\Types\Internal\Ast\Type;
+use LsifPhp\Types\Internal\Ast\UniformIterableType;
 use PhpParser\Node\Expr;
+use PhpParser\Node\Expr\ArrayDimFetch;
 use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Expr\Clone_;
 use PhpParser\Node\Expr\Match_;
@@ -63,6 +65,12 @@ final class TypeCollector
      */
     public function typeExpr(Expr $expr): ?Type
     {
+        if ($expr instanceof ArrayDimFetch && $expr->dim !== null) {
+            $type = $this->typeExpr($expr->var);
+            if ($type instanceof UniformIterableType) {
+                return $type->valueType();
+            }
+        }
         if ($expr instanceof Assign) {
             return $this->typeExpr($expr->expr);
         }

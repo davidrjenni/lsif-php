@@ -10,4 +10,9 @@ class Class1
     {
         return new Class2();
     }
+
+    public function c1m2(): void
+    {
+        echo "Foo";
+    }
 }
