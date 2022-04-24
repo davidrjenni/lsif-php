@@ -37,7 +37,7 @@ if (\ini_set('memory_limit', $memoryLimit) === false) {
 }
 
 $projectRoot = \getcwd();
-$toolInfo = new ToolInfo('lsif-php', '0.0.4', \array_splice($argv, 1));
+$toolInfo = new ToolInfo('lsif-php', '0.0.5', \array_splice($argv, 1));
 
 $git = new Git();
 $emitter = new Emitter();
