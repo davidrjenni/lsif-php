@@ -19,7 +19,7 @@ final class Item extends Edge
         self::PROPERTY_REFERENCES,
     ];
 
-    /** @param  int[]  $inVs */
+    /** @param int[] $inVs */
     public function __construct(
         int $id,
         private int $outV,

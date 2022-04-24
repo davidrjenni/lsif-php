@@ -17,7 +17,7 @@ class Class2
         return new Class1();
     }
 
-    /** @param  string[]  $c2m3p1 */
+    /** @param string[] $c2m3p1 */
     private function c2m3(array $c2m3p1): void
     {
         foreach ($c2m3p1 as $k => $v) {
@@ -41,7 +41,7 @@ class Class2
         $this->c2m4([['a', 'b'], ['c', 'd']]);
     }
 
-    /** @param  string[][]  $c2m4p1 */
+    /** @param string[][] $c2m4p1 */
     private function c2m4(array $c2m4p1): void
     {
         foreach ($c2m4p1 as $i => [$j, $k]) {

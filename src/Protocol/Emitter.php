@@ -84,7 +84,7 @@ final class Emitter
         return $this->emit(new DefinitionResult($this->id()));
     }
 
-    /** @param  HoverResultContent[]  $content */
+    /** @param HoverResultContent[] $content */
     public function emitHoverResult(array $content): int
     {
         return $this->emit(new HoverResult($this->id(), $content));
@@ -115,25 +115,25 @@ final class Emitter
         $this->emit(new Next($this->id(), $outV, $inV));
     }
 
-    /** @param  int[]  $inVs */
+    /** @param int[] $inVs */
     public function emitItem(int $outV, array $inVs, int $documentId): void
     {
         $this->emit(new Item($this->id(), $outV, $inVs, $documentId));
     }
 
-    /** @param  int[]  $inVs */
+    /** @param int[] $inVs */
     public function emitItemOfDefinitions(int $outV, array $inVs, int $documentId): void
     {
         $this->emit(new Item($this->id(), $outV, $inVs, $documentId, Item::PROPERTY_DEFINITIONS));
     }
 
-    /** @param  int[]  $inVs */
+    /** @param int[] $inVs */
     public function emitItemOfReferences(int $outV, array $inVs, int $documentId): void
     {
         $this->emit(new Item($this->id(), $outV, $inVs, $documentId, Item::PROPERTY_REFERENCES));
     }
 
-    /** @param  int[]  $inVs */
+    /** @param int[] $inVs */
     public function emitContains(int $outV, array $inVs): void
     {
         $this->emit(new Contains($this->id(), $outV, $inVs));
@@ -143,14 +143,12 @@ final class Emitter
     {
         $line = json_encode($element, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
         $this->writer->writeLn($line);
-
         return $element->id();
     }
 
     private function id(): int
     {
         $this->id++;
-
         return $this->id;
     }
 }

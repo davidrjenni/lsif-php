@@ -15,7 +15,7 @@ final class Document
     /** @var int[] */
     private array $referenceRangeIds;
 
-    /** @param  Stmt[]  $stmts */
+    /** @param Stmt[] $stmts */
     public function __construct(
         private int $id,
         private string $path,

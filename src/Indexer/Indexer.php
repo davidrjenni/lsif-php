@@ -162,7 +162,7 @@ final class Indexer
         }
     }
 
-    /** @param  HoverResultContent[]  $hoverContent */
+    /** @param HoverResultContent[] $hoverContent */
     private function emitDefinition(Node $node, Document $doc, array $hoverContent): Definition
     {
         $rangeId = $this->emitRange($node, $doc);
@@ -334,7 +334,7 @@ final class Indexer
         $this->emitter->emitContains($this->projectId, array_keys($this->documents));
     }
 
-    /** @param  Closure(Node, Document): void  $visitor */
+    /** @param Closure(Node, Document): void $visitor */
     private function traverseDocumentNodes(Closure $visitor): void
     {
         foreach ($this->documents as $doc) {

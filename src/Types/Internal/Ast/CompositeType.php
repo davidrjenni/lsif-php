@@ -20,7 +20,7 @@ final class CompositeType implements Type
         return $this->types;
     }
 
-    /** @param  array<Type|null>  $types */
+    /** @param array<Type|null> $types */
     public static function fromTypes(array $types): ?Type
     {
         $ts = [];

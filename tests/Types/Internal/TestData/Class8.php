@@ -11,7 +11,7 @@ class Class8
         C8C1 = 23,
         C8C2 = 42;
 
-    /** @param  Class7  $c8p1  is a test property */
+    /** @param Class7 $c8p1 is a test property */
     public function __construct(private Class7 $c8p1)
     {
     }

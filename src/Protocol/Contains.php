@@ -6,7 +6,7 @@ namespace LsifPhp\Protocol;
 
 final class Contains extends Edge
 {
-    /** @param  int[]  $inVs */
+    /** @param int[] $inVs */
     public function __construct(int $id, private int $outV, private array $inVs)
     {
         parent::__construct($id, Edge::LABEL_CONTAINS);

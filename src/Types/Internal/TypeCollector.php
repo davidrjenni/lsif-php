@@ -48,7 +48,7 @@ final class TypeCollector
     /**
      * Returns all fully-qualified names of "upper" class-likes, e.g. parent classes, interfaces or traits.
      *
-     * @param  string[]  $classes
+     * @param  string[] $classes
      * @return string[]
      */
     public function uppers(array $classes): array
@@ -125,7 +125,7 @@ final class TypeCollector
     /**
      * Collects the expression types from the given definitions.
      *
-     * @param  array<string, Definition>  $definitions
+     * @param array<string, Definition> $definitions
      */
     public function collect(array $definitions): void
     {

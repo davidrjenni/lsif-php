@@ -38,8 +38,8 @@ final class Composer
     }
 
     /**
-     * @param  array<string, mixed>  $composer
-     * @param  array<string, mixed>  $lock
+     * @param array<string, mixed> $composer
+     * @param array<string, mixed> $lock
      */
     public function __construct(private array $composer, array $lock)
     {
@@ -93,7 +93,7 @@ final class Composer
         return array_values($dirs);
     }
 
-    /** @param  string[]  $dirs */
+    /** @param string[] $dirs */
     private function prefixExists(array $dirs, string $dir): bool
     {
         foreach ($dirs as $d) {

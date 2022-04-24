@@ -214,7 +214,7 @@ final class HoverContentGenerator
         return '';
     }
 
-    /** @param  Name[]  $names */
+    /** @param Name[] $names */
     private function joinNames(array $names): string
     {
         return implode(

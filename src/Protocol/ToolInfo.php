@@ -8,7 +8,7 @@ use JsonSerializable;
 
 final class ToolInfo implements JsonSerializable
 {
-    /** @param  string[]  $args */
+    /** @param string[] $args */
     public function __construct(
         private string $name,
         private string $version,

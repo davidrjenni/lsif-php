@@ -28,7 +28,7 @@ final class TypeInfo
     /**
      * Collects all definitions from the given statements.
      *
-     * @param  Stmt[]  $stmts
+     * @param Stmt[] $stmts
      */
     public function collectDefinitions(int $docId, array $stmts): void
     {
@@ -75,7 +75,7 @@ final class TypeInfo
         return $this->find($expr, fn(string $class): string => IdentifierBuilder::fqPropertyName($class, $name));
     }
 
-    /** @param  callable(string): string  $name */
+    /** @param callable(string): string $name */
     private function find(Name|Expr $expr, callable $name): string
     {
         $classes = $expr instanceof Name

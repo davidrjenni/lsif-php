@@ -21,7 +21,7 @@ use function ltrim;
 /** IdentifierBuilder helps to construct fully qualified names from AST nodes. */
 final class IdentifierBuilder
 {
-    /** @param  Name|ClassConst  $class the class const node or the class name */
+    /** @param Name|ClassConst $class the class const node or the class name */
     public static function fqConstName(Name|ClassConst|string $class, string $const): string
     {
         if (is_string($class)) {

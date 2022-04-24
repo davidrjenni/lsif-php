@@ -61,7 +61,7 @@ final class DefinitionCollector
     /**
      * Collects all definitions from the given statements.
      *
-     * @param  Stmt[]  $stmts
+     * @param Stmt[] $stmts
      */
     public function collect(int $docId, array $stmts): void
     {

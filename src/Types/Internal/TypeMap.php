@@ -40,7 +40,7 @@ final class TypeMap
     /**
      * Returns all fully-qualified names of "upper" class-likes, e.g. parent classes, interfaces or traits.
      *
-     * @param  string[]  $classes
+     * @param  string[] $classes
      * @return string[]
      */
     public function uppers(array $classes): array
@@ -119,13 +119,13 @@ final class TypeMap
         }
     }
 
-    /** @param  string[]  $classNames */
+    /** @param string[] $classNames */
     public function propertyType(array $classNames, string $name): ?Type
     {
         return $this->classType($classNames, '$' . $name);
     }
 
-    /** @param  string[]  $classNames */
+    /** @param string[] $classNames */
     public function methodType(array $classNames, string $method): ?Type
     {
         $type = $this->classType($classNames, "{$method}()");
@@ -142,7 +142,7 @@ final class TypeMap
         return null;
     }
 
-    /** @param  string[]  $classNames */
+    /** @param string[] $classNames */
     private function classType(array $classNames, string $name): ?Type
     {
         foreach ($classNames as $className) {

@@ -28,7 +28,7 @@ final class NodeTraverserFactory
     /**
      * Creates a new AST traverser.
      *
-     * @param  Closure(Node, mixed...): void  $visitor
+     * @param Closure(Node, mixed...): void $visitor
      */
     public function create(object $newThis, Closure $visitor, mixed ...$args): NodeTraverserInterface
     {
@@ -38,7 +38,7 @@ final class NodeTraverserFactory
         $traverser->addVisitor(
             new class ($newThis, $visitor, $args) extends NodeVisitorAbstract
             {
-                /** @param  mixed[]  $args */
+                /** @param mixed[] $args */
                 public function __construct(
                     private object $newThis,
                     private Closure $visitor,
