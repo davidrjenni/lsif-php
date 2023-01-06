@@ -52,17 +52,17 @@ jobs:
         run: src lsif upload -github-token=${{ secrets.GITHUB_TOKEN }}
 ```
 
-### GitLab
+### [GitLab CI/CD](https://docs.gitlab.com/ee/user/project/code_intelligence.html)
 
 Add the following job to your pipeline:
 
 ```yml
-lsif-job:
+code_navigation:
   image: davidrjenni/lsif-php:main
   artifacts:
     reports:
       lsif: dump.lsif
-  scripts:
+  script:
     - lsif-php
     - src lsif upload
 ```
