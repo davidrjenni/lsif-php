@@ -49,7 +49,7 @@ jobs:
           # FIXME: see https://github.com/actions/checkout/issues/760
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
       - name: Upload LSIF data
-        run: src lsif upload -github-token=${{ secrets.GITHUB_TOKEN }}
+        run: src code-intel upload -github-token=${{ secrets.GITHUB_TOKEN }}
 ```
 
 ### [GitLab CI/CD](https://docs.gitlab.com/ee/user/project/code_intelligence.html)
@@ -64,7 +64,7 @@ code_navigation:
       lsif: dump.lsif
   script:
     - lsif-php
-    - src lsif upload
+    - src code-intel upload
 ```
 
 ### Manual
@@ -77,5 +77,5 @@ the LSIF data and upload it:
 ```bash
 $ composer require --dev davidrjenni/lsif-php
 $ vendor/bin/lsif-php
-$ src lsif upload
+$ src code-intel upload
 ```
